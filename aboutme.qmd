@@ -2,6 +2,26 @@
 title: "About me"
 ---
 
-Add some text and a figure describing myself.
+## Brief introduction
 
-For details, see the exercise instructions. 
+::: {style="text-align: center;"}
+![Me and my cat](profile.jpg){width=600px fig-align="center"}
+:::
+
+Hi, I'm Yufei! I’m a second-year PhD student in Chemistry with a research focus on drug delivery systems for cancer treatment. While my background might be a bit unusual in this class, I’m also pursuing a secondary master’s degree in Statistics to broaden my skill set. I’m deeply fascinated by data analysis and passionate about conducting interdisciplinary research that bridges my expertise in chemistry and biology with statistical tools. I believe MADA presents an excellent opportunity to strengthen my coding skills and advance my data analysis capabilities.
+
+## Skills
+
+I’ve taken several courses in the Statistics department and am familiar with both R and Python. As part of a course project, I developed an interactive R Shiny app to visualize cancer incidence across various cancer sites, differentiated by age groups, sex and states. I’m excited to learn more about programming and statistical modeling through this course.
+
+## Fun facts
+
+I have a lovely cat named Mercury. She’s very playful and always excited to see people, especially when my friends visit. Whenever I come home from school, she immediately jumps onto the windowsill to watch me park.
+
+## Interesting website
+
+I’m excited to share a fantastic YouTube channel with you called [StatQuest](https://youtube.com/@statquest). It offers clear and engaging explanations of statistics and data science concepts in a fun and approachable way. The host, Josh Starmer, breaks down complex theories and methodologies into simple and easy-to-understand pieces, making challenging topics accessible. I'm especially impressed with the quirky animations and the host's enthusiastic style, which turn dry, technical content into an enjoyable learning experience.
+
+
+
+

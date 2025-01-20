@@ -8,6 +8,7 @@ Placeholder file for the future R coding exercise.
 ```{r, warning=FALSE}
 # load package
 library(dslabs)
+library(tidyverse)
 #look at help file for gapminder data
 help(gapminder)
 #get an overview of data structure
@@ -156,3 +157,175 @@ summary(fit2)
 For fit1: The p<.001, which indicates that infant mortality is a significant predictor of life expectancy in the year 2000, and there is a negative relationship between them.
 For fit2: The p=0.616>0.05, which indicates that population size is not a significant predictor of life expectancy in the year 2000.
 
+
+## This section contributed by Rayleen Lewis.
+
+### Module 3 Part 2: Exploration of movielens data
+
+I chose to explore the 'movielens' dataset. This contains information on movie titles, release year, genre, and ratings (including user who rated the movie and a time stamp for the rating).
+
+Here's a summary of the data structure and variables:
+
+```{r}
+#data structure and summary
+str(movielens)
+summary(movielens)
+```
+
+### Data exploration
+
+I noticed in the summary above that genre appears to have many categories that overlap (e.g., a genre is listed as Comedy\|Drama\|Romance).
+
+```{r}
+genre_options <- movielens %>%
+  group_by(genres) %>%
+  summarize(n = n()) %>%
+  arrange(desc(n))
+genre_options
+
+```
+
+There are approximately 900 different entries for genre, many of which include multiple genres. It is important to note that the genres always have a capitalized first letter and appear in alphabetical order (e.g., Crime\|Drama\|Film-Noir\|Romance). I will need to get this variable into a usable format during the data cleaning process.
+
+### Data cleaning
+
+I'm interested in whether the mean movie rating has increased over time, especially as special effects have improved. Since this is particularly relevant for action movies, I'm interested in seeing if this association differs between action and romance movies (a genre where special effects don't usually matter).
+
+Another thing noticed during the data exploration was that this dataset spans from 1902 to 2016. The first use of computer animation in a movie didn't occur until 1965, so I will also exclude movies prior to 1960.
+
+To get the data into a usable format to answer these questions, I conducted the following steps: 
+
+1. Dropped unnecessary variables (title, userID, and timestamp) 
+
+2. Removed observations where the movie year as missing (i.e., NA) 
+
+3. Removed rows with a year prior to 1960 
+
+4. Create indicator variables for action movies and romance movies 
+
+5. Create a categorical year variable to represent decade the movie came out (for exploratory purposes)
+
+```{r}
+#Creating new, clean dataset classed movies from movielens
+movies <- movielens %>% 
+  #Removing unnecessary variables
+  select(movieId, year, genres, rating) %>%
+  #Deleting rows missing year information
+  filter(!is.na(year)) %>%
+  #Deleting rows with year < 1960
+  filter(year >= 1960) %>%
+  #Creating action indicator variable, 1 if Action is in the genre list, 0 otherwise
+  mutate(action = if_else(grepl("Action", genres), 1, 0)) %>%
+  #Creating romance indicator variable, 1 if romance is in the genre list, 0 otherwise
+  mutate(romance = if_else(grepl("Romance", genres), 1, 0)) %>%
+  #Creating 4 level indicator that combines action and romance indicators
+  mutate(act_rom = if_else(action == 0 & romance ==0, 0, 
+                           if_else(action == 1 & romance == 0, 1, 
+                                   if_else(action == 0 & romance == 1, 2,
+                                           if_else(action == 1 & romance == 1, 3, NA))))) %>%
+  #Creating categorical year variable grouped by decade
+  mutate(year_cat = case_when(year < 1970 ~ 1,
+                              year >= 1970 & year < 1980 ~ 2,
+                              year >= 1980 & year < 1990 ~ 3,
+                              year >= 1990 & year < 2000 ~ 4,
+                              year >= 2000 & year < 2010 ~ 5,
+                              year >= 2010 ~ 6))
+
+#Confirming structure and summary of the new dataset movies
+str(movies)
+summary(movies)
+
+```
+
+Next I want to confirm that the new indicator variables appeared to work by spot checking the new dataset.
+
+```{r}
+#Rows with Action included in the genre all have a value of 1 for action and 0 if they do not have action in the genre. Same goes for romance.
+movies %>%
+  select(genres, action, romance, act_rom) %>%
+  head(20)
+
+#Movies with both action and romance in the genre have values of 1 for both indicator variables and 3 for combined variable
+movies %>%
+  select(genres, action, romance, act_rom) %>%
+  filter(genres == "Action|Adventure|Comedy|Romance|Thriller") %>%
+  head(10)
+
+
+```
+
+This looks good, movies with Action in the genre (even multi-genre movies) have a value of 1 for the action indicator. Same goes for romance movies for the romance indicator. Movies not in these genres have a 0 for the respective indicator variable.
+
+### Exploratory figures
+
+These figures are being used to explore the whether movie ratings have increased with increasing use of computer graphics. The first figure is a stacked bar chart with year on the x-axis and the proportion of each rating on the y-axis. Ratings are color coded. The second is a boxplot of ratings by decade of release. These are plotted using the data overall and by genre (action/romance). As a note, since these are meant to be exploratory, I did not make them "pretty" by adjusting labels or aesthetic features.
+
+```{r}
+#Figure 1: Stacked bar chart looking at proportion of each rating by year
+movies_sorted <- movies %>% arrange(rating)
+ggplot(movies_sorted, aes(x=year, y = rating, fill=factor(rating))) + geom_bar(position="fill", stat="identity") +
+  scale_fill_brewer(palette = "Spectral") +
+  labs(title = "Proportion of each rating by year", y="Proportion of each rating")
+```
+
+Overall, it seems like the average movie rating is likely decreasing since the cumulative proportion of ratings 4-5 has decreased with time.
+
+```{r}
+#Creating boxing plot of median movie rating by decade - overall
+ggplot(movies, aes(x=factor(year_cat), y=rating)) + geom_boxplot() +
+  labs(title="Median rating by decade of release date (1=1960s, 6=2010s)")
+```
+
+The median rating has also decreased somewhat over time. It also looks like ratings have become less varied (tighter IQR) with time.
+
+The next set of figures are meant to be used to understand differences in the association between rating and year by genre (action vs romance).
+
+```{r}
+#Figure 2: Stacked bar chart looking at proportion of each rating by year for action movies and romance movies only
+movies_sorted_act_rom <- movies %>% arrange(rating) %>% filter(act_rom == 1 | act_rom ==2)
+ggplot(movies_sorted_act_rom, aes(x=year, y = rating, fill=factor(rating))) + geom_bar(position="fill", stat="identity") +
+  scale_fill_brewer(palette = "Spectral") +
+  labs(title = "Proportion of each rating by year", y="Proportion of each rating")+
+  facet_grid(~act_rom)
+
+```
+
+There aren't any particularly obvious patterns in ratings by movie type (action on the left, romance on the right).
+
+```{r}
+
+#Creating boxing plot of median movie rating by decade - by genre (action and romance)
+ggplot(movies_sorted_act_rom, aes(x=factor(year_cat), y=rating)) + geom_boxplot() +
+  labs(title="Median rating by decade of release date (panel 1 = action, panel 2 = romance) (1=1960s, 6=2010s)")+
+  facet_grid(~act_rom)
+```
+
+Similarly, the median (IQR) ratings are similar between the two genres.
+
+### Statisical models
+
+To test the first research question, I performed a simple linear regression of rating as the outcome and year as the predictor. As a note, rating is not continuous, it is ordinal. It wold be more appropriate to use a ordinal logistic regression, but I'm assuming this is outside the scope of this class and simple linear regression will be acceptable for demonstration purposes.
+
+```{r}
+#Simple linear regression model modeling rating by year
+movies_model1 <- lm(rating ~ year, movies)
+#Getting model results
+summary(movies_model1)
+```
+
+Year was significantly negatively associated with mean move rating (P \< 0.001). This association was in the opposite direction than my hypothesis. Maybe as computer graphics were used more and more in movies, peoples' expectations got higher and higher making it harder to get a high rating?
+
+To look at the second question, I performed a multivariable linear regression with an interaction between year and my action/romance indicator. I also restricted the dataset to only movies who were either action or romance (movies that were both or neither were excluded).
+
+```{r}
+#Multivariable linear regression model modeling rating by year
+movies_model2 <- lm(rating ~ year + act_rom + act_rom:year, movies_sorted_act_rom)
+#Getting model results
+summary(movies_model2)
+```
+
+There was a significant difference in the effect of year on ratings for romance and action movies (P \< 0.001 - from interaction term). As expected, year had a stronger effect on action movies than romance movies (based on the estimates from the table above - effect of a 1 year increase on mean rating is -0.015 + 0.0049 = -0.0101 for action movies (coded as 1) and -0.015 + 2\*0.0049 = -0.0052 for romance movies (coded as 2)).
+
+### Conclusions
+
+Average movie ratings have decreased over time since computer graphics began being used in movies. This association is stornger for action movies than romance movies.

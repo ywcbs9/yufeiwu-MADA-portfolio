@@ -3,3 +3,156 @@ title: "R Coding Exercise"
 ---
 
 Placeholder file for the future R coding exercise.
+
+### Load package
+```{r, warning=FALSE}
+# load package
+library(dslabs)
+#look at help file for gapminder data
+help(gapminder)
+#get an overview of data structure
+str(gapminder)
+#get a summary of data
+summary(gapminder)
+#determine the type of object gapminder is
+class(gapminder)
+```
+
+### Creat new object africadata
+```{r, warning=FALSE}
+#assign only the African countries to a new object/variable called africadata
+africadata <- gapminder[gapminder$continent == "Africa", ]
+
+# Check the structure of the africadata object
+str(africadata)
+
+# Check the summary of the africadata object
+summary(africadata)
+```
+
+### Creat two objects
+```{r, warning=FALSE}
+# Create an object containing only 'infant_mortality' and 'life_expectancy'
+infant_life <- africadata[, c("infant_mortality", "life_expectancy")]
+
+# Check the structure of 'infant_life'
+str(infant_life)
+
+# Check the summary of 'infant_life'
+summary(infant_life)
+
+# Create an object containing only 'population' and 'life_expectancy'
+pop_life <- africadata[, c("population", "life_expectancy")]
+
+# Check the structure of 'pop_life'
+str(pop_life)
+
+# Check the summary of 'pop_life'
+summary(pop_life)
+```
+
+### Plot life expectancy as a function of infant mortality and as a function of population size
+```{r, warning=FALSE}
+#load package
+library(ggplot2)
+
+#plot life expectancy as a function of infant mortality
+ggplot(infant_life, aes(x = infant_mortality, y = life_expectancy)) +
+  geom_point() +
+  labs(title = "Relationship between life expectancy and infant mortality",
+       x = "Infant Mortality",
+       y = "Life Expectancy")
+
+#plot life expectancy as a function of population size
+ggplot(pop_life, aes(x = population, y = life_expectancy)) +
+  geom_point() +
+  scale_x_log10() +  # set x-axis to log scale
+  labs(title = "Relationship between life expectancy and population size",
+       x = "Population Size",
+       y = "Life Expectancy")
+
+```
+
+### Descriptive text
+Plot 1: There is a negative correlation between infant mortality and life expectancy because lower infant mortality often leads to higher life expectancy.
+Plot 2: There is a positive correlation between population and life expectancy because countries with larger population often have better healthcare system which leads to higher life expentancy.
+
+‘Streaks’: In both plots, especially the second one, there are ‘streaks’ of data that seem to go together. After taking a look at the africadata, I believe it may because of the effect of years. For a certain country, as year goes larger, both the population and life expectancy become higher (similar situation with infant mortality and life expectancy). So I try to make another two plots marking different countries.
+
+### Remake plots and mark different countries
+```{r, warning=FALSE}
+#plot life expectancy as a function of infant mortality, with different colors for each country
+ggplot(infant_life, aes(x = infant_mortality, y = life_expectancy, color = africadata$country)) +
+  geom_point() +  
+  labs(title = "Relationship between life expectancy and infant mortality",
+       x = "Infant Mortality",
+       y = "Life Expectancy") +
+  theme(legend.title = element_blank(),  # adjust legend
+        legend.text = element_text(size = 8))
+
+#plot life expectancy as a function of population size, with different colors for each country
+ggplot(pop_life, aes(x = population, y = life_expectancy, color = africadata$country)) +
+  geom_point() +  
+  scale_x_log10() +  # set x-axis to log scale
+  labs(title = "Relationship between life expectancy and population size",
+       x = "Population Size",
+       y = "Life Expectancy") +
+  theme(legend.title = element_blank(),  # adjust legend
+        legend.text = element_text(size = 8))
+```
+From above two new generated plots, we can confirm that the "streaks" are point clusters from the same country.
+
+
+### More data processing
+```{r, warning=FALSE}
+#check which years have missing data for infant mortality
+missing_data_years <- africadata[is.na(africadata$infant_mortality), "year"]
+table(missing_data_years)  # count of missing data per year
+
+# Extract data for the year 2000
+data_2000 <- africadata[africadata$year == 2000, ]
+
+# Check the structure and summary
+str(data_2000)
+summary(data_2000)
+
+```
+
+### More plotting
+```{r, warning=FALSE}
+#plot life expectancy as a function of infant mortality
+ggplot(data_2000, aes(x = infant_mortality, y = life_expectancy)) +
+  geom_point() +
+  labs(title = "Relationship between life expectancy and infant mortality",
+       x = "Infant Mortality",
+       y = "Life Expectancy")
+
+#plot life expectancy as a function of population size
+ggplot(data_2000, aes(x = population, y = life_expectancy)) +
+  geom_point() +
+  scale_x_log10() +  # set x-axis to log scale
+  labs(title = "Relationship between life expectancy and population size",
+       x = "Population Size",
+       y = "Life Expectancy")
+
+```
+
+There is a negative correlation between infant mortality and life expectancy, and no noticeable correlation between population size and life expectancy.
+
+### Simple model fits
+```{r, warning=FALSE}
+#fit linear model with infant mortality as the predictor for life expectancy
+fit1 <- lm(life_expectancy ~ infant_mortality, data = data_2000)
+
+#fit linear model with population size as the predictor for life expectancy
+fit2 <- lm(life_expectancy ~ population, data = data_2000)
+
+# Display the summary of both models
+summary(fit1)  
+summary(fit2)  
+```
+
+###Comments:
+For fit1: The p<.001, which indicates that infant mortality is a significant predictor of life expectancy in the year 2000, and there is a negative relationship between them.
+For fit2: The p=0.616>0.05, which indicates that population size is not a significant predictor of life expectancy in the year 2000.
+

@@ -153,7 +153,7 @@ summary(fit1)
 summary(fit2)  
 ```
 
-###Comments:
+### Comments:
 For fit1: The p<.001, which indicates that infant mortality is a significant predictor of life expectancy in the year 2000, and there is a negative relationship between them.
 For fit2: The p=0.616>0.05, which indicates that population size is not a significant predictor of life expectancy in the year 2000.
 

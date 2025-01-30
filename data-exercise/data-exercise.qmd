@@ -1,0 +1,87 @@
+---
+title: "Data Exercise"
+---
+
+### Inspiration
+
+When evaluating the therapeutic efficacy of an anti-tumor drug using animal models, we typically perform immunohistochemical staining on tumor tissues. Beyond capturing images of the stained slides, we also quantify the results, such as calculating the percentage of positive cells relative to the total number of cells in an image. This analysis is often conducted using an ImageJ plugin. However, after completing this module, I wonder if R could be used for this task instead. I use a online [ki67 staining image](https://molecular.pathology.ufl.edu/2017/06/05/ki67-ihc-single-stain-on-human-tumor-slide/) to perform the analysis (ki67 staining is to measure how much the tumor is proliferating).
+
+### Load package
+
+```{r, warning=FALSE}
+library(EBImage)
+```
+
+### Load the image
+
+```{r, warning=FALSE}
+img <- readImage("ki67.jpg")
+display(img)
+```
+
+As the figure shows, the positive cells are in brown color, darker than the negative cells (which are blue), so I will convert the image to grayscale and use different threshold to count the positive and total cells.
+
+### Thresholding to Identify Cells
+I will threshold the grayscale image to identify areas that likely correspond to cells.
+
+```{r, warning=FALSE}
+# Convert the image to grayscale
+img_gray <- channel(img, "grey")
+
+# Display the grayscale image
+display(img_gray)
+
+# Thresholding to isolate cell regions (background vs. cells)
+threshold_value <- 0.6  # Adjust this value to make sure all the cells will be counted
+binary_img <- img_gray < threshold_value
+
+# Display the binary image
+display(binary_img)
+```
+
+
+### Segmenting the Cells
+
+I will use connected component analysis to identify and count individual cells, getting the total number of cells.
+```{r, warning=FALSE}
+# Perform connected component labeling to segment the cells
+label_img <- bwlabel(binary_img)
+
+# Display the labeled image
+display(label_img)
+
+# Count the total number of cells
+total_cells <- max(label_img)  # The maximum label value represents the total number of cells
+print(paste("Total number of cells: ", total_cells))
+```
+
+### Counting Positive Cells
+Next, I want to identify the positive cells (brown stained) by applying a second threshold to the grayscale image.
+
+```{r, warning=FALSE}
+# Threshold the grayscale image to identify positive cells
+threshold_brown_value <- 0.3  # Adjust based on the intensity of the brown staining
+positive_cells_img <- img_gray < threshold_brown_value  # Darker pixels are considered positive
+
+# Display the adjusted image
+display(positive_cells_img)
+
+# Perform connected component labeling for positive cells
+positive_label_img <- bwlabel(positive_cells_img)
+
+# Count the number of positive cells
+positive_cells <- max(positive_label_img)  # The maximum label value for positive cells
+print(paste("Number of positive cells: ", positive_cells))
+```
+
+### Calculating the Percentage of Positive Cells
+
+```{r, warning=FALSE}
+# Calculate the percentage of positive cells
+percentage_positive <- (positive_cells / total_cells) * 100
+print(paste("Percentage of positive cells: ", round(percentage_positive, 2), "%"))
+```
+
+### Result
+
+The percentage of positive cells is 23.25%, which is comparable to the result obtained from ImageJ (23.01%). This suggests that this approach could serve as an alternative to ImageJ, particularly when analyzing a large number of images, as it allows for an easy workflow by only manually changing the thresholds. 

@@ -15,7 +15,9 @@ website:
           - text: "R Coding Exercise"
             file: coding-exercise/coding-exercise.qmd
           - text: "Data Exercise"
-            file: data-exercise/data-exercise.qmd            
+            file: data-exercise/data-exercise.qmd
+          - text: "CDC Data Exercise"
+            file: cdcdata-exercise/cdcdata-exercise.qmd
     right:
       - icon: github 
         href: https://github.com/ywcbs9/yufeiwu-MADA-portfolio        

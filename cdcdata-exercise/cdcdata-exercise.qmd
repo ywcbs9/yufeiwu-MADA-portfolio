@@ -1,0 +1,175 @@
+---
+title: "CDC Data Exercise"
+---
+
+### Description
+The data I use for this exercise is called "An aggregated dataset of serially collected influenza A virus morbidity and titer measurements from virus-infected ferrets." I got it from National Center for Immunization and Respiratory Diseases. It contains data of 728 ferrets inoculated with 126 unique IAV, including morbidity, mortality, and viral titer data. Here is the link to this dataset: <https://data.cdc.gov/National-Center-for-Immunization-and-Respiratory-D/An-aggregated-dataset-of-serially-collected-influe/cr56-k9wj/about_data>
+
+### Load and process the data
+```{r, message = FALSE, warning=FALSE}
+# Load package
+library(here)
+library(dplyr)
+library(gt)
+library(ggplot2)
+
+# Load data
+iavdata <- read.csv(here("cdcdata-exercise", "influenza_data.csv"))
+
+# Get an overview of the data
+str(iavdata)       # Structure of the dataset
+summary(iavdata)   # Summary statistics
+dim(iavdata)       # Dimensions (rows and columns)
+
+# Check missing values
+colSums(is.na(iavdata))
+
+# Pick a few vairables
+iavdata2 <- iavdata %>% select(lethal, Origin, wt_loss, wt_loss_day, temp)
+
+# View the structure of the new data frame
+str(iavdata2)
+
+# Display the first few rows
+head(iavdata2)
+```
+The variables d1_inoc, d2_inoc, ..., d9_inoc have missing values, likely due to the every-other-day sampling schedule or the euthanasia of ferrets that reached humane endpoints in the study. However, I will not focus on these variables, as I find other variables more interesting for exploration. I choose the variables lethal, Origin, wt_loss, wt_loss_day, and temp to do exploration.
+
+lethal: if the ferret survived the 14 day p.i. inoculation period (FALSE) or was humanely. 
+euthanized between days 1-14 p.i. due to reaching experimental endpoints (TRUE).
+
+Origin: Categorical column indicating the host origin of the inoculating virus.
+
+wt_loss: Numerical column that specifies the maximum percentage weight loss.
+
+wt_loss_day :Numerical column that indicates the day p.i. the maximum percentage weight loss reported in wt_loss was detected.
+
+temp: Numerical column that specifies the maximum increase in degrees Celsius.
+
+### Explore the data
+**Explore the categorical variables**
+```{r, message = FALSE, warning=FALSE}
+# Make table summarizing the Origin lethal rate
+# Encode lethal to be logical
+iavdata2 <- iavdata2 %>%
+  mutate(lethal = as.logical(lethal)) 
+
+# Create a summary table with lethal rate (where lethal is TRUE)
+exploratory_table <- iavdata2 %>%
+  group_by(Origin) %>%
+  summarise(
+    Total = n(),
+    Lethal_True = sum(lethal, na.rm = TRUE),  # Ensure TRUE values are counted
+    Lethal_Rate = round((Lethal_True / Total) * 100, 2)  # Calculate percentage
+  ) %>%
+  arrange(desc(Lethal_Rate))  # Sort by Lethal Rate
+
+# Display the table
+exploratory_table %>%
+  gt() %>%
+  tab_header(
+    title = "Lethal (TRUE) Rate by Origin"
+  ) %>%
+  cols_label(
+    Origin = "Origin",
+    Total = "Total Cases",
+    Lethal_True = "Lethal (TRUE) Count",
+    Lethal_Rate = "Lethal Rate (%)"
+  )
+
+# Make table summarizing the composition of the Origin
+origin_summary <- iavdata2 %>%
+  group_by(Origin) %>%
+  summarise(
+    Count = n(),  # Total observations per origin
+    Percentage = round((Count / nrow(iavdata2)) * 100, 2)  # Calculate percentage
+  ) %>%
+  arrange(desc(Count))  # Sort by highest count
+
+# Display the table
+origin_summary %>%
+  gt() %>%
+  tab_header(
+    title = "Composition of Origin"
+  ) %>%
+  cols_label(
+    Origin = "Origin",
+    Count = "Count",
+    Percentage = "Percentage (%)"
+  )
+```
+
+**Explore continuous variables**
+```{r, message = FALSE, warning=FALSE}
+# Plot the distribution and summarize mean and standard deviation of wt_loss, wt_loss_day, and temp
+# Define a function to plot and summarize a variable
+plot_and_summarize <- function(data, variable) {
+  # Create histogram with density curve
+  p <- ggplot(data, aes(x = !!sym(variable))) +
+    geom_histogram(aes(y = ..density..), bins = 30, fill = "pink", color = "black") +
+    geom_density(color = "skyblue", size = 1) +
+    labs(title = paste("Distribution of", variable), x = variable, y = "Density") +
+    theme_minimal()
+  
+  # Print the plot
+  print(p)
+  
+  # Calculate mean and standard deviation
+  summary_stats <- data %>%
+    summarise(
+      Mean = mean(!!sym(variable), na.rm = TRUE),
+      SD = sd(!!sym(variable), na.rm = TRUE)
+    )
+  
+  return(summary_stats)
+}
+
+# Plot and summarize wt_loss
+wt_loss_summary <- plot_and_summarize(iavdata2, "wt_loss")
+print(wt_loss_summary)
+
+# Plot and summarize wt_loss_day
+wt_loss_day_summary <- plot_and_summarize(iavdata2, "wt_loss_day")
+print(wt_loss_day_summary)
+
+# Plot and summarize temp
+temp_summary <- plot_and_summarize(iavdata2, "temp")
+print(temp_summary)
+
+# Box plot of lethal vs. wt_loss
+ggplot(iavdata2, aes(x = as.factor(lethal), y = wt_loss)) +
+  geom_boxplot(fill = "skyblue", color = "black", outlier.color = "red", outlier.size = 2) +
+  labs(
+    title = "Box Plot of Lethal vs. Maximum Percentage Weight Loss",
+    x = "Lethal (0 = False, 1 = True)",
+    y = "Weight Loss (wt_loss)"
+  ) +
+  theme_minimal()
+
+# Box plot of lethal vs. wt_loss_day
+ggplot(iavdata2, aes(x = as.factor(lethal), y = wt_loss_day)) +
+  geom_boxplot(fill = "skyblue", color = "black", outlier.color = "red", outlier.size = 2) +
+  labs(
+    title = "Box Plot of Lethal vs. Day of Maximum Percentage Weight Loss",
+    x = "Lethal (0 = False, 1 = True)",
+    y = "Weight Loss Day (wt_loss_day)"
+  ) +
+  theme_minimal()
+
+# Box plot of lethal vs. temp
+ggplot(iavdata2, aes(x = as.factor(lethal), y = temp)) +
+  geom_boxplot(fill = "skyblue", color = "black", outlier.color = "red", outlier.size = 2) +
+  labs(
+    title = "Box Plot of Lethal vs. Maximum Increase in Degrees Celsius",
+    x = "Lethal (0 = False, 1 = True)",
+    y = "Temperature (temp)"
+  ) +
+  theme_minimal()
+
+
+
+
+
+
+```
+

@@ -1,0 +1,10 @@
+I have a dataset called iavdata2. It contains 728 observations and 5 variabels, the followings are the condition of my dataset: 
+1. lethal (Mode: Logical with 620 Falses and 108 True)
+2. origin (with Lenght 728, class: Character, and mode: Character)
+3. wt_loss (min. 0.000, 1st Qu.: 4.800, median : 9.300, mean : 9.914, 3rd Qu. : 14.425, and Max. : 27.500, sd: 6.6681872)
+4. wt_loss_day with (min. 0.000, 1st Qu. 4.000, Median: 7.000), Mean: 6.431, 3rd Qu. 9.000, max. 14.000, sd: 3.1939950) 
+5. temp (min. : 0.000, 1st Qu. : 1.000, Median: 1.500, Mean : 1.586, 3rd Qu. : 2.200, max.: 4.000, sd: 0.7760666) 
+6. Composition of origin: Avian 384 (52.75%), human 180 (24.73%), variant 146 (20.05%), swine 15 (2.06%), canine 3 (0.41%)  
+7. lethal condition: False ( avian 287, canine 3, human 173, swine 15, variant 142), and true ( avian 97, canine 0, human 7, swine 0, variant 4) 
+
+Please help me create a new sythetic dataset which is similiar with my existing dataset, based on information provided. Generate code in R

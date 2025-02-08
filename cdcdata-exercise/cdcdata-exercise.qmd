@@ -3,15 +3,26 @@ title: "CDC Data Exercise"
 ---
 
 ### Description
+
 The data I use for this exercise is called "An aggregated dataset of serially collected influenza A virus morbidity and titer measurements from virus-infected ferrets." I got it from National Center for Immunization and Respiratory Diseases. It contains data of 728 ferrets inoculated with 126 unique IAV, including morbidity, mortality, and viral titer data. Here is the link to this dataset: <https://data.cdc.gov/National-Center-for-Immunization-and-Respiratory-D/An-aggregated-dataset-of-serially-collected-influe/cr56-k9wj/about_data>
 
 ### Load and process the data
+
 ```{r, message = FALSE, warning=FALSE}
 # Load package
 library(here)
 library(dplyr)
+install.packages("rlang")
+install.packages("rlang", dependencies = TRUE)
+install.packages("gt", dependencies = TRUE)
 library(gt)
 library(ggplot2)
+install.packages("gridExtra")
+library(gridExtra)
+
+install.packages("ggpubr")
+library(ggpubr)
+library(tidyverse)
 
 # Load data
 iavdata <- read.csv(here("cdcdata-exercise", "influenza_data.csv"))
@@ -33,10 +44,10 @@ str(iavdata2)
 # Display the first few rows
 head(iavdata2)
 ```
+
 The variables d1_inoc, d2_inoc, ..., d9_inoc have missing values, likely due to the every-other-day sampling schedule or the euthanasia of ferrets that reached humane endpoints in the study. However, I will not focus on these variables, as I find other variables more interesting for exploration. I choose the variables lethal, Origin, wt_loss, wt_loss_day, and temp to do exploration.
 
-lethal: if the ferret survived the 14 day p.i. inoculation period (FALSE) or was humanely. 
-euthanized between days 1-14 p.i. due to reaching experimental endpoints (TRUE).
+lethal: if the ferret survived the 14 day p.i. inoculation period (FALSE) or was humanely. euthanized between days 1-14 p.i. due to reaching experimental endpoints (TRUE).
 
 Origin: Categorical column indicating the host origin of the inoculating virus.
 
@@ -47,7 +58,9 @@ wt_loss_day :Numerical column that indicates the day p.i. the maximum percentage
 temp: Numerical column that specifies the maximum increase in degrees Celsius.
 
 ### Explore the data
+
 **Explore the categorical variables**
+
 ```{r, message = FALSE, warning=FALSE}
 # Make table summarizing the Origin lethal rate
 # Encode lethal to be logical
@@ -100,6 +113,7 @@ origin_summary %>%
 ```
 
 **Explore continuous variables**
+
 ```{r, message = FALSE, warning=FALSE}
 # Plot the distribution and summarize mean and standard deviation of wt_loss, wt_loss_day, and temp
 # Define a function to plot and summarize a variable
@@ -167,9 +181,291 @@ ggplot(iavdata2, aes(x = as.factor(lethal), y = temp)) +
   theme_minimal()
 
 
+```
 
+# This section contributed by Muhammad Nasir
 
+In this part, I would like to create a new dataset that similiar with the existing dataset. Let assume that the existing dataset is not possible to share publicly. Therefore, we want to create sythetic data to share wihch is similiar with the original dataset.
+
+### Summarise the data
+
+Before stsrting to sythesize a new dataset from the existing dataset, I would like to check the summary of the data and explore the data more.
+
+```{r}
+summary(iavdata2)
+```
+
+I want to see more information
+
+```{r}
+origin_summary %>%
+  gt() %>%
+  tab_header(
+    title = "Composition of Origin"
+  ) %>%
+  cols_label(
+    Origin = "Origin",
+    Count = "Count",
+    Percentage = "Percentage (%)"
+  )
+```
+
+I want to create table Lethal vs origin
+
+```{r}
+table(iavdata2$lethal, iavdata2$Origin)
+```
+
+I want to find the SD of continouse variables
+
+```{r}
+numeric_cols <- sapply(iavdata2, is.numeric) # select numeric column only 
+std_dev <- apply(iavdata2[, numeric_cols], 2, sd)
+
+print(std_dev)
+```
+
+I want to create dataset based on the condition of existing dataset. I get help from AI to generate the dataset with the following prompt.
+
+I have a dataset called iavdata2. It contains 728 observations and 5 variabels, the followings are the condition of my dataset: 1. lethal (Mode: Logical with 620 Falses and 108 True) 2. origin (with Lenght 728, class: Character, and mode: Character) 3. wt_loss (min. 0.000, 1st Qu.: 4.800, median : 9.300, mean : 9.914, 3rd Qu. : 14.425, and Max. : 27.500, sd: 6.6681872) 4. wt_loss_day with (min. 0.000, 1st Qu. 4.000, Median: 7.000), Mean: 6.431, 3rd Qu. 9.000, max. 14.000, sd: 3.1939950) 5. temp (min. : 0.000, 1st Qu. : 1.000, Median: 1.500, Mean : 1.586, 3rd Qu. : 2.200, max.: 4.000, sd: 0.7760666) 6. Composition of origin: Avian 384 (52.75%), human 180 (24.73%), variant 146 (20.05%), swine 15 (2.06%), canine 3 (0.41%) 7. lethal condition: False ( avian 287, canine 3, human 173, swine 15, variant 142), and true ( avian 97, canine 0, human 7, swine 0, variant 4)
+
+Please help me create a new sythetic dataset which is similiar with my existing dataset, based on information provided. Generate code in R
+
+```{r}
+# Set the number of observations for the synthetic dataset
+n <- 728
+
+# 1. Generate the 'lethal' variable (Logical: 620 Falses and 108 Trues)
+lethal <- sample(c(FALSE, TRUE), size = n, replace = TRUE, prob = c(620/728, 108/728))
+
+# 2. Generate the 'origin' variable (Character with given proportions)
+origin <- sample(c("Avian", "Human", "Variant", "Swine", "Canine"), 
+                 size = n, replace = TRUE, 
+                 prob = c(384/728, 180/728, 146/728, 15/728, 3/728))
+
+# 3. Generate the 'wt_loss' variable (Continuous variable with mean 9.914 and sd 6.668)
+wt_loss <- rnorm(n, mean = 9.914, sd = 6.668)
+
+# 4. Generate the 'wt_loss_day' variable (Continuous variable with mean 6.431 and sd 3.194)
+wt_loss_day <- rnorm(n, mean = 6.431, sd = 3.194)
+
+# 5. Generate the 'temp' variable (Continuous variable with mean 1.586 and sd 0.776)
+temp <- rnorm(n, mean = 1.586, sd = 0.776)
+
+# Combine all variables into a data frame
+syn_iavdata <- data.frame(
+  lethal = lethal,
+  origin = origin,
+  wt_loss = wt_loss,
+  wt_loss_day = wt_loss_day,
+  temp = temp
+)
 
 
 ```
 
+```{r}
+head(syn_iavdata)
+```
+
+Check dimension of the generated dataset
+
+```{r}
+dim(syn_iavdata)
+```
+
+```{r}
+# Display a summary of the synthetic dataset
+summary(syn_iavdata)
+```
+
+#### Data exploration and compare between original dan sythetic data
+
+### Explore the data
+
+**Explore the categorical variables**
+
+```{r, message = FALSE, warning=FALSE}
+# Make table summarizing the Origin lethal rate
+# Encode lethal to be logical
+syn_iavdata <- syn_iavdata %>%
+  mutate(lethal = as.logical(lethal)) 
+
+# Create a summary table with lethal rate (where lethal is TRUE)
+exploratory_table <- syn_iavdata %>%
+  group_by(origin) %>%
+  summarise(
+    Total = n(),
+    Lethal_True = sum(lethal, na.rm = TRUE),  # Ensure TRUE values are counted
+    Lethal_Rate = round((Lethal_True / Total) * 100, 2)  # Calculate percentage
+  ) %>%
+  arrange(desc(Lethal_Rate))  # Sort by Lethal Rate
+
+# Display the table# syn_iavdataDisplay the table
+exploratory_table %>%
+  gt() %>%
+  tab_header(
+    title = "Lethal (TRUE) Rate by Origin"
+  ) %>%
+  cols_label(
+    origin = "Origin",
+    Total = "Total Cases",
+    Lethal_True = "Lethal (TRUE) Count",
+    Lethal_Rate = "Lethal Rate (%)"
+  )
+
+# Make table summarizing the composition of the Origin
+origin_summary <- syn_iavdata %>%
+  group_by(origin) %>%
+  summarise(
+    Count = n(),  # Total observations per origin
+    Percentage = round((Count / nrow(iavdata2)) * 100, 2)  # Calculate percentage
+  ) %>%
+  arrange(desc(Count))  # Sort by highest count
+
+# Display the table
+origin_summary %>%
+  gt() %>%
+  tab_header(
+    title = "Composition of Origin"
+  ) %>%
+  cols_label(
+    origin = "Origin",
+    Count = "Count",
+    Percentage = "Percentage (%)"
+  )
+```
+
+**Explore the numeric variables**
+
+I want to explore both dataset by comparing both datasets
+
+```{r}
+# Box plot of lethal vs. wt_loss_day
+plot1 <- ggplot(iavdata2, aes(x = as.factor(lethal), y = wt_loss_day)) +
+  geom_boxplot(fill = "skyblue", color = "black", outlier.color = "red", outlier.size = 2) +
+  labs(
+    title = "Lethal vs. Day of Weight Loss (original data)",
+    x = "Lethal (0 = False, 1 = True)",
+    y = "Weight Loss Day (wt_loss_day)"
+  ) +
+  theme_minimal()
+
+plot2 <- ggplot(syn_iavdata, aes(x = as.factor(lethal), y = wt_loss_day)) +
+  geom_boxplot(fill = "skyblue", color = "black", outlier.color = "red", outlier.size = 2) +
+  labs(
+    title = "Lethal vs. Day of Weight Loss (Sythetic Data) ",
+    x = "Lethal (0 = False, 1 = True)",
+    y = "Weight Loss Day (wt_loss_day)"
+  ) +
+  theme_minimal()
+
+
+
+lethal_day <- grid.arrange(plot1, plot2, ncol = 2) # to put those plots side by side 
+
+figure_file = here("cdcdata-exercise","pictures","lethal_day.png")
+ggsave(filename = figure_file, plot=lethal_day) 
+
+```
+
+```{r}
+# Box plot of lethal vs. temp
+plot3 <- ggplot(iavdata2, aes(x = as.factor(lethal), y = temp)) +
+  geom_boxplot(fill = "skyblue", color = "black", outlier.color = "red", outlier.size = 2) +
+  labs(
+    title = "Lethal vs. Temperature  (Original Data)",
+    x = "Lethal (0 = False, 1 = True)",
+    y = "Temperature (temp)"
+  ) +
+  theme_minimal()
+
+
+plot4 <- ggplot(syn_iavdata, aes(x = as.factor(lethal), y = temp)) +
+  geom_boxplot(fill = "skyblue", color = "black", outlier.color = "red", outlier.size = 2) +
+  labs(
+    title = "Lethal vs. Temperature (sythetic Data)",
+    x = "Lethal (0 = False, 1 = True)",
+    y = "Temperature (temp)"
+  ) +
+  theme_minimal()
+
+lethal_temp <- grid.arrange(plot3, plot4, ncol = 2)
+
+
+figure_file = here("cdcdata-exercise","pictures","lethal_temp.png")
+ggsave(filename = figure_file, plot=lethal_temp) 
+```
+
+***Weight loss: original VS sythetics***
+
+```{r}
+his_wtloss_ori <- ggplot(iavdata2, aes(x = wt_loss)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "green", color = "black", alpha = 0.7) +  # Density-based histogram
+  geom_density(color = "blue", size = 1) +  # Overlay density curve
+  labs(title = "Distribution of wt_loss (original)", x = "wt_loss", y = "Density") + 
+  theme_minimal()
+
+his_wtloss_syn <- ggplot(syn_iavdata, aes(x = wt_loss)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "pink", color = "black", alpha = 0.7) +  # Density-based histogram
+  geom_density(color = "blue", size = 1) +  # Overlay density curve
+  labs(title = "Distribution of wt_loss (synthetic)", x = "wt_loss", y = "Density") + 
+  theme_minimal()
+
+his_wtloss <- grid.arrange(his_wtloss_ori, his_wtloss_syn, ncol = 2)
+
+
+
+figure_file = here("cdcdata-exercise","pictures","his_wtlossp.png")
+ggsave(filename = figure_file, plot=his_wtloss)
+
+
+```
+
+***Wight loss day: Original data vs sythetic data***
+
+```{r}
+his_day_ori <- ggplot(iavdata2, aes(x = wt_loss)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "purple", color = "black", alpha = 0.7) +  # Density-based histogram
+  geom_density(color = "blue", size = 1) +  # Overlay density curve
+  labs(title = "Distribution of Day Weight loss (original)", x = "wt_day_loss", y = "Density") + 
+  theme_minimal()
+
+his_day_syn <- ggplot(syn_iavdata, aes(x = wt_loss)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "lightblue", color = "black", alpha = 0.7) +  # Density-based histogram
+  geom_density(color = "blue", size = 1) +  # Overlay density curve
+  labs(title = "Distribution of Day Weight loss  (synthetic)", x = "wt_day_loss", y = "Density") + 
+  theme_minimal()
+
+his_wt_day_loss <- grid.arrange(his_day_ori, his_day_syn, ncol = 2)
+
+
+
+figure_file = here("cdcdata-exercise","pictures","his_wt_day_loss.png")
+ggsave(filename = figure_file, plot=his_wt_day_loss)
+```
+
+***Temperature: original VS sythetics***
+
+```{r}
+his_temp_ori <- ggplot(iavdata2, aes(x = wt_loss)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "red", color = "black", alpha = 0.7) +  # Density-based histogram
+  geom_density(color = "blue", size = 1) +  # Overlay density curve
+  labs(title = "Distribution of temperature (original)", x = "temperature", y = "Density") + 
+  theme_minimal()
+
+his_temp_syn <- ggplot(syn_iavdata, aes(x = wt_loss)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "yellow", color = "black", alpha = 0.7) +  # Density-based histogram
+  geom_density(color = "blue", size = 1) +  # Overlay density curve
+  labs(title = "Distribution of temperature (synthetic)", x = "temperature", y = "Density") + 
+  theme_minimal()
+
+his_temp <- grid.arrange(his_temp_ori, his_temp_syn, ncol = 2)
+
+
+
+figure_file = here("cdcdata-exercise","pictures","his_temp .png")
+ggsave(filename = figure_file, plot=his_temp )
+
+
+```

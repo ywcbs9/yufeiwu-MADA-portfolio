@@ -23,6 +23,8 @@ library(gridExtra)
 install.packages("ggpubr")
 library(ggpubr)
 library(tidyverse)
+install.packages("cli")
+library(cli)
 
 # Load data
 iavdata <- read.csv(here("cdcdata-exercise", "influenza_data.csv"))

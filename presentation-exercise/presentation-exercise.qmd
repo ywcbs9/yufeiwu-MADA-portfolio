@@ -110,6 +110,7 @@ Now it looks almost good, and then I will make modifications manually to make it
 library(ggplot2)
 library(dplyr)
 library(tidyr)
+library(ggthemes)
 
 # Load dataset
 score <- read.csv("fandango_score_comparison.csv")
@@ -185,6 +186,7 @@ ggplot(rating_counts_extended, aes(x = Rating, y = percentage, group = Source, f
   scale_fill_manual(values = colors_fill) +  # Use the custom color palette for the fill
   scale_color_manual(values = colors_line) +  # Ensure the lines share the same colors as the ribbons
   theme_minimal() +
+  theme_fivethirtyeight()+
   labs(title = "Fandango LOVES Movies",
        subtitle = "Normalized ratings distribution of 146 films in theaters in 2015 that
 had 30+ reviews on Fandango.com",

@@ -320,100 +320,102 @@ Attaching package: 'dplyr'</code></pre>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Load dataset</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>score <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"fandango_score_comparison.csv"</span>)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a dataframe with normalized scores</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>score_normalized <span class="ot">&lt;-</span> score <span class="sc">%&gt;%</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Fandango_Stars, RT_norm_round, RT_user_norm_round, Metacritic_norm_round, Metacritic_user_norm_round, IMDB_norm_round) <span class="sc">%&gt;%</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gather</span>(<span class="at">key =</span> <span class="st">"Source"</span>, <span class="at">value =</span> <span class="st">"Rating"</span>)  <span class="co"># Reshape data to long format</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a count of ratings for each source</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>rating_counts <span class="ot">&lt;-</span> score_normalized <span class="sc">%&gt;%</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Source, Rating) <span class="sc">%&gt;%</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span>  <span class="co"># Avoid the grouped output warning</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Source) <span class="sc">%&gt;%</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percentage =</span> count <span class="sc">/</span> <span class="fu">sum</span>(count) <span class="sc">*</span> <span class="dv">100</span>)  <span class="co"># Convert to percentage</span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Extend the data to include the full range of x-axis</span></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>rating_counts_extended <span class="ot">&lt;-</span> rating_counts <span class="sc">%&gt;%</span></span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">complete</span>(<span class="at">Rating =</span> <span class="fu">seq</span>(<span class="fl">0.5</span>, <span class="dv">5</span>, <span class="at">by =</span> <span class="fl">0.5</span>), <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">count =</span> <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Source) <span class="sc">%&gt;%</span></span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percentage =</span> count <span class="sc">/</span> <span class="fu">sum</span>(count) <span class="sc">*</span> <span class="dv">100</span>)  <span class="co"># Recalculate percentage after filling</span></span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Define color palette for both the ribbons and the lines to match</span></span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>colors_line <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Fandango_Stars"</span> <span class="ot">=</span> <span class="st">"#fb4d2f"</span>, </span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>            <span class="st">"IMDB_norm_round"</span> <span class="ot">=</span> <span class="st">"#f4c026"</span>, </span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Metacritic_norm_round"</span> <span class="ot">=</span> <span class="st">"#a04f9c"</span>, </span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>            <span class="st">"RT_norm_round"</span> <span class="ot">=</span> <span class="st">"#6a6a6a"</span>, </span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>            <span class="st">"RT_user_norm_round"</span> <span class="ot">=</span> <span class="st">"#37a4da"</span>, </span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Metacritic_user_norm_round"</span> <span class="ot">=</span> <span class="st">"#aeca92"</span>)</span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>colors_fill <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Fandango_Stars"</span> <span class="ot">=</span> <span class="st">"#fb4d2f"</span>, </span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>            <span class="st">"IMDB_norm_round"</span> <span class="ot">=</span> <span class="st">"#6a6a6a"</span>, </span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Metacritic_norm_round"</span> <span class="ot">=</span> <span class="st">"#6a6a6a"</span>, </span>
-<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>            <span class="st">"RT_norm_round"</span> <span class="ot">=</span> <span class="st">"#6a6a6a"</span>, </span>
-<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>            <span class="st">"RT_user_norm_round"</span> <span class="ot">=</span> <span class="st">"#6a6a6a"</span>, </span>
-<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Metacritic_user_norm_round"</span> <span class="ot">=</span> <span class="st">"#6a6a6a"</span>)</span>
-<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a custom label map</span></span>
-<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>label_map <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Fandango_Stars"</span> <span class="ot">=</span> <span class="st">"Fandango"</span>, </span>
-<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>               <span class="st">"RT_norm_round"</span> <span class="ot">=</span> <span class="st">"Rotten Tomatoes"</span>, </span>
-<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>               <span class="st">"RT_user_norm_round"</span> <span class="ot">=</span> <span class="st">"Rotten Tomatoes users"</span>, </span>
-<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Metacritic_norm_round"</span> <span class="ot">=</span> <span class="st">"Metacritic"</span>, </span>
-<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Metacritic_user_norm_round"</span> <span class="ot">=</span> <span class="st">"Metacritic users"</span>, </span>
-<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>               <span class="st">"IMDB_norm_round"</span> <span class="ot">=</span> <span class="st">"IMDb users"</span>)</span>
-<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Add hjust and vjust columns to control text label positioning</span></span>
-<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>rating_counts_extended <span class="ot">&lt;-</span> rating_counts_extended <span class="sc">%&gt;%</span></span>
-<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="fu">case_when</span>(</span>
-<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>      Source <span class="sc">==</span> <span class="st">"Fandango_Stars"</span> <span class="sc">~</span> <span class="sc">-</span><span class="fl">0.3</span>, </span>
-<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>      Source <span class="sc">==</span> <span class="st">"IMDB_norm_round"</span> <span class="sc">~</span> <span class="fl">1.2</span>,</span>
-<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>      Source <span class="sc">==</span> <span class="st">"Metacritic_norm_round"</span> <span class="sc">~</span> <span class="dv">4</span>,</span>
-<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>      Source <span class="sc">==</span> <span class="st">"RT_norm_round"</span> <span class="sc">~</span> <span class="fl">5.5</span>,</span>
-<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>      Source <span class="sc">==</span> <span class="st">"RT_user_norm_round"</span> <span class="sc">~</span> <span class="fl">2.2</span>,</span>
-<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>      Source <span class="sc">==</span> <span class="st">"Metacritic_user_norm_round"</span> <span class="sc">~</span> <span class="fl">1.2</span></span>
-<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="fu">case_when</span>(</span>
-<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>      Source <span class="sc">==</span> <span class="st">"Fandango_Stars"</span> <span class="sc">~</span> <span class="fl">1.5</span>,</span>
-<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>      Source <span class="sc">==</span> <span class="st">"IMDB_norm_round"</span> <span class="sc">~</span> <span class="fl">1.5</span>,</span>
-<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>      Source <span class="sc">==</span> <span class="st">"Metacritic_norm_round"</span> <span class="sc">~</span> <span class="dv">2</span>,</span>
-<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>      Source <span class="sc">==</span> <span class="st">"RT_norm_round"</span> <span class="sc">~</span> <span class="fl">1.5</span>,</span>
-<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a>      Source <span class="sc">==</span> <span class="st">"RT_user_norm_round"</span> <span class="sc">~</span> <span class="fl">1.8</span>,</span>
-<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a>      Source <span class="sc">==</span> <span class="st">"Metacritic_user_norm_round"</span> <span class="sc">~</span> <span class="fl">1.5</span></span>
-<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the plot with shaded areas beneath the lines using geom_ribbon</span></span>
-<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rating_counts_extended, <span class="fu">aes</span>(<span class="at">x =</span> Rating, <span class="at">y =</span> percentage, <span class="at">group =</span> Source, <span class="at">fill =</span> Source, <span class="at">color =</span> Source)) <span class="sc">+</span></span>
-<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> <span class="dv">0</span>, <span class="at">ymax =</span> percentage), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span>  <span class="co"># Add ribbon for shadow effect</span></span>
-<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span>  <span class="co"># Sharp lines for each source</span></span>
-<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">5</span>)) <span class="sc">+</span>  <span class="co"># X-axis breaks at 0.5 intervals</span></span>
-<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> colors_fill) <span class="sc">+</span>  <span class="co"># Use the custom color palette for the fill</span></span>
-<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> colors_line) <span class="sc">+</span>  <span class="co"># Ensure the lines share the same colors as the ribbons</span></span>
-<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Fandango LOVES Movies"</span>,</span>
-<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Normalized ratings distribution of 146 films in theaters in 2015 that</span></span>
-<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a><span class="st">had 30+ reviews on Fandango.com"</span>,</span>
-<span id="cb7-83"><a href="#cb7-83" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">""</span>,</span>
-<span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Percentage"</span>) <span class="sc">+</span></span>
-<span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>,  <span class="co"># Hide the legend</span></span>
-<span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">hjust =</span> <span class="dv">0</span>), </span>
-<span id="cb7-87"><a href="#cb7-87" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Title settings</span></span>
-<span id="cb7-88"><a href="#cb7-88" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">hjust =</span> <span class="dv">0</span>),  </span>
-<span id="cb7-89"><a href="#cb7-89" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Subtitle settings</span></span>
-<span id="cb7-90"><a href="#cb7-90" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.margin =</span> <span class="fu">margin</span>(<span class="dv">20</span>, <span class="dv">20</span>, <span class="dv">20</span>, <span class="dv">20</span>)  <span class="co"># Adjust plot margin</span></span>
-<span id="cb7-91"><a href="#cb7-91" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span>  <span class="co"># Hide the legend</span></span>
-<span id="cb7-92"><a href="#cb7-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expand_limits</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5</span>)) <span class="sc">+</span>  <span class="co"># Extend the x-axis range</span></span>
-<span id="cb7-93"><a href="#cb7-93" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add custom labels near the peak of each line with correct colors</span></span>
-<span id="cb7-94"><a href="#cb7-94" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> rating_counts_extended <span class="sc">%&gt;%</span></span>
-<span id="cb7-95"><a href="#cb7-95" aria-hidden="true" tabindex="-1"></a>              <span class="fu">group_by</span>(Source) <span class="sc">%&gt;%</span></span>
-<span id="cb7-96"><a href="#cb7-96" aria-hidden="true" tabindex="-1"></a>              <span class="fu">slice</span>(<span class="fu">which.max</span>(percentage)),  <span class="co"># Take the highest point for each line</span></span>
-<span id="cb7-97"><a href="#cb7-97" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">label =</span> label_map[Source], <span class="at">color =</span> Source, <span class="at">hjust =</span> hjust, <span class="at">vjust =</span> vjust),</span>
-<span id="cb7-98"><a href="#cb7-98" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggthemes)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Load dataset</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>score <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"fandango_score_comparison.csv"</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a dataframe with normalized scores</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>score_normalized <span class="ot">&lt;-</span> score <span class="sc">%&gt;%</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Fandango_Stars, RT_norm_round, RT_user_norm_round, Metacritic_norm_round, Metacritic_user_norm_round, IMDB_norm_round) <span class="sc">%&gt;%</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gather</span>(<span class="at">key =</span> <span class="st">"Source"</span>, <span class="at">value =</span> <span class="st">"Rating"</span>)  <span class="co"># Reshape data to long format</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a count of ratings for each source</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>rating_counts <span class="ot">&lt;-</span> score_normalized <span class="sc">%&gt;%</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Source, Rating) <span class="sc">%&gt;%</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span>  <span class="co"># Avoid the grouped output warning</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Source) <span class="sc">%&gt;%</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percentage =</span> count <span class="sc">/</span> <span class="fu">sum</span>(count) <span class="sc">*</span> <span class="dv">100</span>)  <span class="co"># Convert to percentage</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Extend the data to include the full range of x-axis</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>rating_counts_extended <span class="ot">&lt;-</span> rating_counts <span class="sc">%&gt;%</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">complete</span>(<span class="at">Rating =</span> <span class="fu">seq</span>(<span class="fl">0.5</span>, <span class="dv">5</span>, <span class="at">by =</span> <span class="fl">0.5</span>), <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">count =</span> <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Source) <span class="sc">%&gt;%</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percentage =</span> count <span class="sc">/</span> <span class="fu">sum</span>(count) <span class="sc">*</span> <span class="dv">100</span>)  <span class="co"># Recalculate percentage after filling</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Define color palette for both the ribbons and the lines to match</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>colors_line <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Fandango_Stars"</span> <span class="ot">=</span> <span class="st">"#fb4d2f"</span>, </span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>            <span class="st">"IMDB_norm_round"</span> <span class="ot">=</span> <span class="st">"#f4c026"</span>, </span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Metacritic_norm_round"</span> <span class="ot">=</span> <span class="st">"#a04f9c"</span>, </span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>            <span class="st">"RT_norm_round"</span> <span class="ot">=</span> <span class="st">"#6a6a6a"</span>, </span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>            <span class="st">"RT_user_norm_round"</span> <span class="ot">=</span> <span class="st">"#37a4da"</span>, </span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Metacritic_user_norm_round"</span> <span class="ot">=</span> <span class="st">"#aeca92"</span>)</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>colors_fill <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Fandango_Stars"</span> <span class="ot">=</span> <span class="st">"#fb4d2f"</span>, </span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>            <span class="st">"IMDB_norm_round"</span> <span class="ot">=</span> <span class="st">"#6a6a6a"</span>, </span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Metacritic_norm_round"</span> <span class="ot">=</span> <span class="st">"#6a6a6a"</span>, </span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>            <span class="st">"RT_norm_round"</span> <span class="ot">=</span> <span class="st">"#6a6a6a"</span>, </span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>            <span class="st">"RT_user_norm_round"</span> <span class="ot">=</span> <span class="st">"#6a6a6a"</span>, </span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Metacritic_user_norm_round"</span> <span class="ot">=</span> <span class="st">"#6a6a6a"</span>)</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a custom label map</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>label_map <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Fandango_Stars"</span> <span class="ot">=</span> <span class="st">"Fandango"</span>, </span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>               <span class="st">"RT_norm_round"</span> <span class="ot">=</span> <span class="st">"Rotten Tomatoes"</span>, </span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>               <span class="st">"RT_user_norm_round"</span> <span class="ot">=</span> <span class="st">"Rotten Tomatoes users"</span>, </span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Metacritic_norm_round"</span> <span class="ot">=</span> <span class="st">"Metacritic"</span>, </span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Metacritic_user_norm_round"</span> <span class="ot">=</span> <span class="st">"Metacritic users"</span>, </span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>               <span class="st">"IMDB_norm_round"</span> <span class="ot">=</span> <span class="st">"IMDb users"</span>)</span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Add hjust and vjust columns to control text label positioning</span></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>rating_counts_extended <span class="ot">&lt;-</span> rating_counts_extended <span class="sc">%&gt;%</span></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="fu">case_when</span>(</span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>      Source <span class="sc">==</span> <span class="st">"Fandango_Stars"</span> <span class="sc">~</span> <span class="sc">-</span><span class="fl">0.3</span>, </span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>      Source <span class="sc">==</span> <span class="st">"IMDB_norm_round"</span> <span class="sc">~</span> <span class="fl">1.2</span>,</span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>      Source <span class="sc">==</span> <span class="st">"Metacritic_norm_round"</span> <span class="sc">~</span> <span class="dv">4</span>,</span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>      Source <span class="sc">==</span> <span class="st">"RT_norm_round"</span> <span class="sc">~</span> <span class="fl">5.5</span>,</span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>      Source <span class="sc">==</span> <span class="st">"RT_user_norm_round"</span> <span class="sc">~</span> <span class="fl">2.2</span>,</span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>      Source <span class="sc">==</span> <span class="st">"Metacritic_user_norm_round"</span> <span class="sc">~</span> <span class="fl">1.2</span></span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="fu">case_when</span>(</span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>      Source <span class="sc">==</span> <span class="st">"Fandango_Stars"</span> <span class="sc">~</span> <span class="fl">1.5</span>,</span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>      Source <span class="sc">==</span> <span class="st">"IMDB_norm_round"</span> <span class="sc">~</span> <span class="fl">1.5</span>,</span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>      Source <span class="sc">==</span> <span class="st">"Metacritic_norm_round"</span> <span class="sc">~</span> <span class="dv">2</span>,</span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a>      Source <span class="sc">==</span> <span class="st">"RT_norm_round"</span> <span class="sc">~</span> <span class="fl">1.5</span>,</span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a>      Source <span class="sc">==</span> <span class="st">"RT_user_norm_round"</span> <span class="sc">~</span> <span class="fl">1.8</span>,</span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a>      Source <span class="sc">==</span> <span class="st">"Metacritic_user_norm_round"</span> <span class="sc">~</span> <span class="fl">1.5</span></span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the plot with shaded areas beneath the lines using geom_ribbon</span></span>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rating_counts_extended, <span class="fu">aes</span>(<span class="at">x =</span> Rating, <span class="at">y =</span> percentage, <span class="at">group =</span> Source, <span class="at">fill =</span> Source, <span class="at">color =</span> Source)) <span class="sc">+</span></span>
+<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> <span class="dv">0</span>, <span class="at">ymax =</span> percentage), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span>  <span class="co"># Add ribbon for shadow effect</span></span>
+<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span>  <span class="co"># Sharp lines for each source</span></span>
+<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">5</span>)) <span class="sc">+</span>  <span class="co"># X-axis breaks at 0.5 intervals</span></span>
+<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> colors_fill) <span class="sc">+</span>  <span class="co"># Use the custom color palette for the fill</span></span>
+<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> colors_line) <span class="sc">+</span>  <span class="co"># Ensure the lines share the same colors as the ribbons</span></span>
+<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_fivethirtyeight</span>()<span class="sc">+</span></span>
+<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Fandango LOVES Movies"</span>,</span>
+<span id="cb7-83"><a href="#cb7-83" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Normalized ratings distribution of 146 films in theaters in 2015 that</span></span>
+<span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a><span class="st">had 30+ reviews on Fandango.com"</span>,</span>
+<span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">""</span>,</span>
+<span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Percentage"</span>) <span class="sc">+</span></span>
+<span id="cb7-87"><a href="#cb7-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>,  <span class="co"># Hide the legend</span></span>
+<span id="cb7-88"><a href="#cb7-88" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">hjust =</span> <span class="dv">0</span>), </span>
+<span id="cb7-89"><a href="#cb7-89" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Title settings</span></span>
+<span id="cb7-90"><a href="#cb7-90" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">hjust =</span> <span class="dv">0</span>),  </span>
+<span id="cb7-91"><a href="#cb7-91" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Subtitle settings</span></span>
+<span id="cb7-92"><a href="#cb7-92" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.margin =</span> <span class="fu">margin</span>(<span class="dv">20</span>, <span class="dv">20</span>, <span class="dv">20</span>, <span class="dv">20</span>)  <span class="co"># Adjust plot margin</span></span>
+<span id="cb7-93"><a href="#cb7-93" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span>  <span class="co"># Hide the legend</span></span>
+<span id="cb7-94"><a href="#cb7-94" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expand_limits</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5</span>)) <span class="sc">+</span>  <span class="co"># Extend the x-axis range</span></span>
+<span id="cb7-95"><a href="#cb7-95" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add custom labels near the peak of each line with correct colors</span></span>
+<span id="cb7-96"><a href="#cb7-96" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> rating_counts_extended <span class="sc">%&gt;%</span></span>
+<span id="cb7-97"><a href="#cb7-97" aria-hidden="true" tabindex="-1"></a>              <span class="fu">group_by</span>(Source) <span class="sc">%&gt;%</span></span>
+<span id="cb7-98"><a href="#cb7-98" aria-hidden="true" tabindex="-1"></a>              <span class="fu">slice</span>(<span class="fu">which.max</span>(percentage)),  <span class="co"># Take the highest point for each line</span></span>
+<span id="cb7-99"><a href="#cb7-99" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">label =</span> label_map[Source], <span class="at">color =</span> Source, <span class="at">hjust =</span> hjust, <span class="at">vjust =</span> vjust),</span>
+<span id="cb7-100"><a href="#cb7-100" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -575,23 +577,23 @@ Here’ the original graph for comparison:
 <span id="cb12-94"><a href="#cb12-94" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the table</span></span>
 <span id="cb12-95"><a href="#cb12-95" aria-hidden="true" tabindex="-1"></a>final_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="yjnlthiizo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#yjnlthiizo table {
+<div id="ufwmcecmtr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ufwmcecmtr table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#yjnlthiizo thead, #yjnlthiizo tbody, #yjnlthiizo tfoot, #yjnlthiizo tr, #yjnlthiizo td, #yjnlthiizo th {
+#ufwmcecmtr thead, #ufwmcecmtr tbody, #ufwmcecmtr tfoot, #ufwmcecmtr tr, #ufwmcecmtr td, #ufwmcecmtr th {
   border-style: none;
 }
 
-#yjnlthiizo p {
+#ufwmcecmtr p {
   margin: 0;
   padding: 0;
 }
 
-#yjnlthiizo .gt_table {
+#ufwmcecmtr .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -617,12 +619,12 @@ Here’ the original graph for comparison:
   border-left-color: #D3D3D3;
 }
 
-#yjnlthiizo .gt_caption {
+#ufwmcecmtr .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#yjnlthiizo .gt_title {
+#ufwmcecmtr .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -634,7 +636,7 @@ Here’ the original graph for comparison:
   border-bottom-width: 0;
 }
 
-#yjnlthiizo .gt_subtitle {
+#ufwmcecmtr .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -646,7 +648,7 @@ Here’ the original graph for comparison:
   border-top-width: 0;
 }
 
-#yjnlthiizo .gt_heading {
+#ufwmcecmtr .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -658,13 +660,13 @@ Here’ the original graph for comparison:
   border-right-color: #D3D3D3;
 }
 
-#yjnlthiizo .gt_bottom_border {
+#ufwmcecmtr .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#yjnlthiizo .gt_col_headings {
+#ufwmcecmtr .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -679,7 +681,7 @@ Here’ the original graph for comparison:
   border-right-color: #D3D3D3;
 }
 
-#yjnlthiizo .gt_col_heading {
+#ufwmcecmtr .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -699,7 +701,7 @@ Here’ the original graph for comparison:
   overflow-x: hidden;
 }
 
-#yjnlthiizo .gt_column_spanner_outer {
+#ufwmcecmtr .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -711,15 +713,15 @@ Here’ the original graph for comparison:
   padding-right: 4px;
 }
 
-#yjnlthiizo .gt_column_spanner_outer:first-child {
+#ufwmcecmtr .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#yjnlthiizo .gt_column_spanner_outer:last-child {
+#ufwmcecmtr .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#yjnlthiizo .gt_column_spanner {
+#ufwmcecmtr .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -731,11 +733,11 @@ Here’ the original graph for comparison:
   width: 100%;
 }
 
-#yjnlthiizo .gt_spanner_row {
+#ufwmcecmtr .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#yjnlthiizo .gt_group_heading {
+#ufwmcecmtr .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -761,7 +763,7 @@ Here’ the original graph for comparison:
   text-align: left;
 }
 
-#yjnlthiizo .gt_empty_group_heading {
+#ufwmcecmtr .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -776,15 +778,15 @@ Here’ the original graph for comparison:
   vertical-align: middle;
 }
 
-#yjnlthiizo .gt_from_md > :first-child {
+#ufwmcecmtr .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#yjnlthiizo .gt_from_md > :last-child {
+#ufwmcecmtr .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#yjnlthiizo .gt_row {
+#ufwmcecmtr .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -803,7 +805,7 @@ Here’ the original graph for comparison:
   overflow-x: hidden;
 }
 
-#yjnlthiizo .gt_stub {
+#ufwmcecmtr .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -816,7 +818,7 @@ Here’ the original graph for comparison:
   padding-right: 5px;
 }
 
-#yjnlthiizo .gt_stub_row_group {
+#ufwmcecmtr .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -830,15 +832,15 @@ Here’ the original graph for comparison:
   vertical-align: top;
 }
 
-#yjnlthiizo .gt_row_group_first td {
+#ufwmcecmtr .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#yjnlthiizo .gt_row_group_first th {
+#ufwmcecmtr .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#yjnlthiizo .gt_summary_row {
+#ufwmcecmtr .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -848,16 +850,16 @@ Here’ the original graph for comparison:
   padding-right: 5px;
 }
 
-#yjnlthiizo .gt_first_summary_row {
+#ufwmcecmtr .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#yjnlthiizo .gt_first_summary_row.thick {
+#ufwmcecmtr .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#yjnlthiizo .gt_last_summary_row {
+#ufwmcecmtr .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -867,7 +869,7 @@ Here’ the original graph for comparison:
   border-bottom-color: #D3D3D3;
 }
 
-#yjnlthiizo .gt_grand_summary_row {
+#ufwmcecmtr .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -877,7 +879,7 @@ Here’ the original graph for comparison:
   padding-right: 5px;
 }
 
-#yjnlthiizo .gt_first_grand_summary_row {
+#ufwmcecmtr .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -887,7 +889,7 @@ Here’ the original graph for comparison:
   border-top-color: #D3D3D3;
 }
 
-#yjnlthiizo .gt_last_grand_summary_row_top {
+#ufwmcecmtr .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -897,11 +899,11 @@ Here’ the original graph for comparison:
   border-bottom-color: #D3D3D3;
 }
 
-#yjnlthiizo .gt_striped {
+#ufwmcecmtr .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#yjnlthiizo .gt_table_body {
+#ufwmcecmtr .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -910,7 +912,7 @@ Here’ the original graph for comparison:
   border-bottom-color: #D3D3D3;
 }
 
-#yjnlthiizo .gt_footnotes {
+#ufwmcecmtr .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -924,7 +926,7 @@ Here’ the original graph for comparison:
   border-right-color: #D3D3D3;
 }
 
-#yjnlthiizo .gt_footnote {
+#ufwmcecmtr .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -933,7 +935,7 @@ Here’ the original graph for comparison:
   padding-right: 5px;
 }
 
-#yjnlthiizo .gt_sourcenotes {
+#ufwmcecmtr .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -947,7 +949,7 @@ Here’ the original graph for comparison:
   border-right-color: #D3D3D3;
 }
 
-#yjnlthiizo .gt_sourcenote {
+#ufwmcecmtr .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -955,72 +957,72 @@ Here’ the original graph for comparison:
   padding-right: 5px;
 }
 
-#yjnlthiizo .gt_left {
+#ufwmcecmtr .gt_left {
   text-align: left;
 }
 
-#yjnlthiizo .gt_center {
+#ufwmcecmtr .gt_center {
   text-align: center;
 }
 
-#yjnlthiizo .gt_right {
+#ufwmcecmtr .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#yjnlthiizo .gt_font_normal {
+#ufwmcecmtr .gt_font_normal {
   font-weight: normal;
 }
 
-#yjnlthiizo .gt_font_bold {
+#ufwmcecmtr .gt_font_bold {
   font-weight: bold;
 }
 
-#yjnlthiizo .gt_font_italic {
+#ufwmcecmtr .gt_font_italic {
   font-style: italic;
 }
 
-#yjnlthiizo .gt_super {
+#ufwmcecmtr .gt_super {
   font-size: 65%;
 }
 
-#yjnlthiizo .gt_footnote_marks {
+#ufwmcecmtr .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#yjnlthiizo .gt_asterisk {
+#ufwmcecmtr .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#yjnlthiizo .gt_indent_1 {
+#ufwmcecmtr .gt_indent_1 {
   text-indent: 5px;
 }
 
-#yjnlthiizo .gt_indent_2 {
+#ufwmcecmtr .gt_indent_2 {
   text-indent: 10px;
 }
 
-#yjnlthiizo .gt_indent_3 {
+#ufwmcecmtr .gt_indent_3 {
   text-indent: 15px;
 }
 
-#yjnlthiizo .gt_indent_4 {
+#ufwmcecmtr .gt_indent_4 {
   text-indent: 20px;
 }
 
-#yjnlthiizo .gt_indent_5 {
+#ufwmcecmtr .gt_indent_5 {
   text-indent: 25px;
 }
 
-#yjnlthiizo .katex-display {
+#ufwmcecmtr .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#yjnlthiizo div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#ufwmcecmtr div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>

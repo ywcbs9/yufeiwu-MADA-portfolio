@@ -1,0 +1,364 @@
+---
+title: "Presentation Exercise"
+---
+
+### Create a graph
+I choose to reproduce a graph in the ariticle ["Be Suspicious Of Online Movie Ratings, Especially Fandango’s"](https://fivethirtyeight.com/features/fandango-movies-ratings/) from FiveThirtyEight. The graph is shown below:
+<div style="text-align: center;">
+  ![](hickey-datalab-fandango-2.png){width="600px"}
+</div>
+
+I first sent the graph to ChatGPT and asked it to re-create the original graph. Here's the initial code I received to make the graph.
+```{r, warning=FALSE}
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+# Load dataset
+score <- read.csv("fandango_score_comparison.csv")
+
+# Create a dataframe with normalized scores
+score_normalized <- score %>%
+  select(Fandango_Stars, RT_norm_round, RT_user_norm_round, Metacritic_norm_round, Metacritic_user_norm_round, IMDB_norm_round) %>%
+  gather(key = "Source", value = "Rating")  # Reshape data to long format
+
+# Create the plot
+ggplot(score_normalized, aes(x = Rating, fill = Source)) +
+  geom_density(alpha = 0.6) + 
+  scale_fill_manual(values = c("Fandango_Ratingvalue" = "red", 
+                               "IMDB_norm_round" = "yellow", 
+                               "Metacritic_norm_round" = "green", 
+                               "RT_norm_round" = "blue", 
+                               "RT_user_norm_round" = "lightblue", 
+                               "Metacritic_user_norm_round" = "lightgreen")) +
+  theme_minimal() +
+  labs(title = "Fandango LOVES Movies",
+       subtitle = "Normalized ratings distribution of films in theaters in 2015",
+       x = "Normalized Rating", 
+       y = "Density") +
+  theme(legend.position = "top") +
+  scale_x_continuous(breaks = seq(0, 5, by = 0.5)) +
+  theme(legend.title = element_blank())
+
+```
+
+The graph is not similar to the original one, so I used some prompts to let ChatGPT revise the code:
+Use percentage as y axis;
+Discrete points that are connected by straight lines instead of smooth curves;
+Use use geom_ribbon to create shadows under each line.
+After iterations, I got the code as below:
+```{r, warning=FALSE}
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+# Load dataset
+score <- read.csv("fandango_score_comparison.csv")
+
+# Create a dataframe with normalized scores
+score_normalized <- score %>%
+  select(Fandango_Stars, RT_norm_round, RT_user_norm_round, Metacritic_norm_round, Metacritic_user_norm_round, IMDB_norm_round) %>%
+  gather(key = "Source", value = "Rating")  # Reshape data to long format
+
+# Create a count of ratings for each source
+rating_counts <- score_normalized %>%
+  group_by(Source, Rating) %>%
+  summarise(count = n(), .groups = "drop") %>%  # Avoid the grouped output warning
+  ungroup() %>%
+  group_by(Source) %>%
+  mutate(percentage = count / sum(count) * 100)  # Convert to percentage
+
+# Extend the data to include the full range of x-axis
+rating_counts_extended <- rating_counts %>%
+  complete(Rating = seq(0.5, 5, by = 0.5), fill = list(count = 0)) %>%
+  group_by(Source) %>%
+  mutate(percentage = count / sum(count) * 100)  # Recalculate percentage after filling
+
+# Define color palette for the shaded areas (to match the original graph)
+colors <- c("Fandango_Stars" = "red", 
+            "IMDB_norm_round" = "yellow", 
+            "Metacritic_norm_round" = "green", 
+            "RT_norm_round" = "blue", 
+            "RT_user_norm_round" = "lightblue", 
+            "Metacritic_user_norm_round" = "lightgreen")
+
+# Create the plot with shaded areas beneath the lines using geom_ribbon
+ggplot(rating_counts_extended, aes(x = Rating, y = percentage, group = Source, fill = Source)) +
+  geom_ribbon(aes(ymin = 0, ymax = percentage), alpha = 0.4) +  # Add ribbon for shadow effect
+  geom_line(size = 1) +  # Sharp lines
+  scale_x_continuous(breaks = seq(0, 5, by = 0.5)) +  # X-axis breaks at 0.5 intervals
+  scale_fill_manual(values = colors) +  # Use the custom color palette for the fill
+  scale_color_manual(values = colors) +  # Use the same color for lines
+  theme_minimal() +
+  labs(title = "Fandango LOVES Movies",
+       subtitle = "Normalized ratings distribution of films in theaters in 2015",
+       x = "Normalized Rating", 
+       y = "Percentage") +
+  theme(legend.position = "top") +
+  theme(legend.title = element_blank()) +  # Clean up legend
+  expand_limits(x = c(0.5, 5))  # Extend the x-axis range
+
+
+```
+
+
+Now it looks almost good, and then I will make modifications manually to make it more similar to the original graph. 
+```{r}
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+# Load dataset
+score <- read.csv("fandango_score_comparison.csv")
+
+# Create a dataframe with normalized scores
+score_normalized <- score %>%
+  select(Fandango_Stars, RT_norm_round, RT_user_norm_round, Metacritic_norm_round, Metacritic_user_norm_round, IMDB_norm_round) %>%
+  gather(key = "Source", value = "Rating")  # Reshape data to long format
+
+# Create a count of ratings for each source
+rating_counts <- score_normalized %>%
+  group_by(Source, Rating) %>%
+  summarise(count = n(), .groups = "drop") %>%  # Avoid the grouped output warning
+  ungroup() %>%
+  group_by(Source) %>%
+  mutate(percentage = count / sum(count) * 100)  # Convert to percentage
+
+# Extend the data to include the full range of x-axis
+rating_counts_extended <- rating_counts %>%
+  complete(Rating = seq(0.5, 5, by = 0.5), fill = list(count = 0)) %>%
+  group_by(Source) %>%
+  mutate(percentage = count / sum(count) * 100)  # Recalculate percentage after filling
+
+# Define color palette for both the ribbons and the lines to match
+colors_line <- c("Fandango_Stars" = "#fb4d2f", 
+            "IMDB_norm_round" = "#f4c026", 
+            "Metacritic_norm_round" = "#a04f9c", 
+            "RT_norm_round" = "#6a6a6a", 
+            "RT_user_norm_round" = "#37a4da", 
+            "Metacritic_user_norm_round" = "#aeca92")
+
+colors_fill <- c("Fandango_Stars" = "#fb4d2f", 
+            "IMDB_norm_round" = "#6a6a6a", 
+            "Metacritic_norm_round" = "#6a6a6a", 
+            "RT_norm_round" = "#6a6a6a", 
+            "RT_user_norm_round" = "#6a6a6a", 
+            "Metacritic_user_norm_round" = "#6a6a6a")
+
+# Create a custom label map
+label_map <- c("Fandango_Stars" = "Fandango", 
+               "RT_norm_round" = "Rotten Tomatoes", 
+               "RT_user_norm_round" = "Rotten Tomatoes users", 
+               "Metacritic_norm_round" = "Metacritic", 
+               "Metacritic_user_norm_round" = "Metacritic users", 
+               "IMDB_norm_round" = "IMDb users")
+
+# Add hjust and vjust columns to control text label positioning
+rating_counts_extended <- rating_counts_extended %>%
+  mutate(
+    hjust = case_when(
+      Source == "Fandango_Stars" ~ -0.3, 
+      Source == "IMDB_norm_round" ~ 1.2,
+      Source == "Metacritic_norm_round" ~ 4,
+      Source == "RT_norm_round" ~ 5.5,
+      Source == "RT_user_norm_round" ~ 2.2,
+      Source == "Metacritic_user_norm_round" ~ 1.2
+    ),
+    vjust = case_when(
+      Source == "Fandango_Stars" ~ 1.5,
+      Source == "IMDB_norm_round" ~ 1.5,
+      Source == "Metacritic_norm_round" ~ 2,
+      Source == "RT_norm_round" ~ 1.5,
+      Source == "RT_user_norm_round" ~ 1.8,
+      Source == "Metacritic_user_norm_round" ~ 1.5
+    )
+  )
+
+# Create the plot with shaded areas beneath the lines using geom_ribbon
+ggplot(rating_counts_extended, aes(x = Rating, y = percentage, group = Source, fill = Source, color = Source)) +
+  geom_ribbon(aes(ymin = 0, ymax = percentage), alpha = 0.3) +  # Add ribbon for shadow effect
+  geom_line(size = 0.5) +  # Sharp lines for each source
+  scale_x_continuous(breaks = seq(0, 5)) +  # X-axis breaks at 0.5 intervals
+  scale_fill_manual(values = colors_fill) +  # Use the custom color palette for the fill
+  scale_color_manual(values = colors_line) +  # Ensure the lines share the same colors as the ribbons
+  theme_minimal() +
+  labs(title = "Fandango LOVES Movies",
+       subtitle = "Normalized ratings distribution of 146 films in theaters in 2015 that
+had 30+ reviews on Fandango.com",
+       x="",
+       y = "Percentage") +
+  theme(legend.position = "none",  # Hide the legend
+    plot.title = element_text(size = 18, face = "bold", color = "black", hjust = 0), 
+    # Title settings
+    plot.subtitle = element_text(size = 14, color = "black", hjust = 0),  
+    # Subtitle settings
+    plot.margin = margin(20, 20, 20, 20)  # Adjust plot margin
+    ) +  # Hide the legend
+  expand_limits(x = c(0, 5)) +  # Extend the x-axis range
+  # Add custom labels near the peak of each line with correct colors
+  geom_text(data = rating_counts_extended %>%
+              group_by(Source) %>%
+              slice(which.max(percentage)),  # Take the highest point for each line
+            aes(label = label_map[Source], color = Source, hjust = hjust, vjust = vjust),
+            size = 3)
+
+```
+
+Here' the original graph for comparison:
+<div style="text-align: center;">
+  ![](hickey-datalab-fandango-2.png){width="500px"}
+</div>
+
+Overall, the reproduced graph is similar to the original one, despite some imperfections, like the x-axis being numbers instead of the star images in the original graph.
+
+### Create a table
+I use the prompts below to let ChatGPT generate table for me:
+Make table showing summary statistics such as mean, median, min, max of the Fandango_Stars, RT_norm_round, RT_user_norm_round, Metacritic_norm_round, Metacritic_user_norm_round, IMDB_norm_round.
+* Bold the column headers for Mean (SD), Median (Q1, Q3), Min, and Max.
+* Highlight the "Mean (SD)" cell specifically for the Fandango platform.
+* Additional text outside of the regular table structure like spanning column headers or correctly attributed footnotes
+* A descriptive caption explaining the useful information summary that the table represents.
+Since I tried for a few hours and ChatGPT still could not add a column of sparklines for me, I made plots of distribution separately and saved them as pictures and then inserted them into the column.
+```{r}
+
+# Load libraries
+library(kableExtra)
+library(gt)
+library(dplyr)
+
+# Read the data
+data <- read.csv("fandango_score_comparison.csv")
+
+# Descriptive platform names
+platform_names <- c(
+  "Fandango_Stars" = "Fandango",
+  "RT_norm_round" = "Rotten Tomatoes",
+  "RT_user_norm_round" = "Rotten Tomatoes users",
+  "Metacritic_norm_round" = "Metacritic",
+  "Metacritic_user_norm_round" = "Metacritic users",
+  "IMDB_norm_round" = "IMDb users"
+)
+
+# List of variables to plot
+variables <- c("Fandango_Stars", "RT_norm_round", "RT_user_norm_round", 
+               "Metacritic_norm_round", "Metacritic_user_norm_round", "IMDB_norm_round")
+
+# Function to generate and save distribution plots
+generate_distribution_plots <- function(variable) {
+  # Create the plot (density plot in this case)
+  p <- ggplot(data, aes_string(x = variable)) + 
+    geom_density(fill = "skyblue", alpha = 0.5) + 
+    theme_minimal()
+  
+  # Save the plot as PNG
+  file_name <- paste0( variable, "_distribution.png")
+  ggsave(file_name, plot = p, width = 8, height = 6)
+  
+  # Return the file path
+  return(file_name)
+}
+
+# Generate and save the distribution plots for each variable
+plot_paths <- sapply(variables, generate_distribution_plots)
+
+# Function to generate image file paths (replace with real image paths)
+generate_image_path <- function(platform_name) {
+  # For demonstration, I use a placeholder image name (replace with your actual images)
+  image_urls <- c(
+    "Fandango" = "Fandango_Stars_distribution.png",
+    "Rotten Tomatoes" = "RT_norm_round_distribution.png",
+    "Rotten Tomatoes users" = "RT_user_norm_round_distribution.png",
+    "Metacritic" = "IMDB_norm_round_distribution.png",
+    "Metacritic users" = "Metacritic_norm_round_distribution.png",
+    "IMDb users" = "Metacritic_user_norm_round_distribution.png"
+  )
+  
+  return(image_urls[platform_name])
+}
+
+# Compute summary statistics for each platform
+summary_stats <- data %>%
+  summarise(
+    `Platform` = platform_names["Fandango_Stars"],
+    `Mean (SD)` = paste0(round(mean(Fandango_Stars), 2), " (", round(sd(Fandango_Stars), 2), ")"),
+    `Median (Q1, Q3)` = paste0(round(median(Fandango_Stars), 2), " (", 
+                               round(quantile(Fandango_Stars, 0.25), 2), ", ", 
+                               round(quantile(Fandango_Stars, 0.75), 2), ")"),
+    Min = round(min(Fandango_Stars), 2),
+    Max = round(max(Fandango_Stars), 2),
+    Distribution = generate_image_path("Fandango")  # Add image path for Fandango
+  )
+
+# Platforms for which summary statistics are needed
+platforms <- c("RT_norm_round", "RT_user_norm_round", "Metacritic_norm_round", 
+               "Metacritic_user_norm_round", "IMDB_norm_round")
+
+# Compute summary statistics for each platform and append them
+for (platform in platforms) {
+  stats <- data %>%
+    summarise(
+      `Platform` = platform_names[platform],
+      `Mean (SD)` = paste0(round(mean(get(platform)), 2), " (", round(sd(get(platform)), 2), ")"),
+      `Median (Q1, Q3)` = paste0(round(median(get(platform)), 2), " (", 
+                                 round(quantile(get(platform), 0.25), 2), ", ", 
+                                 round(quantile(get(platform), 0.75), 2), ")"),
+      Min = round(min(get(platform)), 2),
+      Max = round(max(get(platform)), 2),
+      Distribution = generate_image_path(platform_names[platform])  # Add image path for each platform
+    )
+  
+  # Append the stats to summary_stats
+  summary_stats <- bind_rows(summary_stats, stats)
+}
+
+# Create the table with summary statistics and image column
+final_table <- summary_stats %>%
+  gt() %>%
+  # Adding header that spans multiple columns
+  tab_header(
+    title = "Summary Statistics for Movie Rating Platforms",
+    subtitle = "Comparison of Ratings on Different Platforms"
+  ) %>%
+  tab_spanner(
+    label = md("**Summary Statistics**"),
+    columns = c(`Mean (SD)`, `Median (Q1, Q3)`, Min, Max)
+  ) %>%
+  # Adding a descriptive footnote for statistics
+  tab_footnote(
+    footnote = md("Summary statistics (mean, median, min, max) for different movie rating platforms."),
+    locations = cells_column_labels(columns = `Mean (SD)`)
+  ) %>%
+  # Adding a source note with explanation
+  tab_source_note(
+    source_note = md("**Table 1 caption:** This table compares summary statistics like mean, median, min, and max for ratings across various platforms.")
+  ) %>%
+  # Bold specific column labels: Mean (SD), Median (Q1, Q3), Min, Max
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_labels(columns = c("Mean (SD)", "Median (Q1, Q3)", "Min", "Max"))
+  ) %>%
+  # Highlighting the "Mean (SD)" cell for "Fandango"
+  tab_style(
+    style = cell_fill(color = "lightblue"),  # Highlight color
+    locations = cells_body(
+      rows = summary_stats$Platform == "Fandango",  # Targeting Fandango row
+      columns = "Mean (SD)"
+    )
+  ) %>%
+  # Displaying images in the new 'Image' column
+  fmt_image(
+    columns = "Distribution",
+    rows = everything(),
+    path = NULL,  # Path is not required if you're using URLs
+    file_pattern = "{x}",
+    encode = TRUE
+  )
+
+# Display the table
+final_table
+
+
+```

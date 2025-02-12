@@ -433,174 +433,165 @@ Here’ the original graph for comparison:
 <p>I use the prompts below to let ChatGPT generate table for me: Make table showing summary statistics such as mean, median, min, max of the Fandango_Stars, RT_norm_round, RT_user_norm_round, Metacritic_norm_round, Metacritic_user_norm_round, IMDB_norm_round. * Bold the column headers for Mean (SD), Median (Q1, Q3), Min, and Max. * Highlight the “Mean (SD)” cell specifically for the Fandango platform. * Additional text outside of the regular table structure like spanning column headers or correctly attributed footnotes * A descriptive caption explaining the useful information summary that the table represents. Since I tried for a few hours and ChatGPT still could not add a column of sparklines for me, I made plots of distribution separately and saved them as pictures and then inserted them into the column.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load libraries</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'kableExtra'</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following object is masked from 'package:dplyr':
-
-    group_rows</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#library(kableExtra)</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: package 'gt' was built under R version 4.3.3</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the data</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"fandango_score_comparison.csv"</span>)</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Descriptive platform names</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>platform_names <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Fandango_Stars"</span> <span class="ot">=</span> <span class="st">"Fandango"</span>,</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"RT_norm_round"</span> <span class="ot">=</span> <span class="st">"Rotten Tomatoes"</span>,</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"RT_user_norm_round"</span> <span class="ot">=</span> <span class="st">"Rotten Tomatoes users"</span>,</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Metacritic_norm_round"</span> <span class="ot">=</span> <span class="st">"Metacritic"</span>,</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Metacritic_user_norm_round"</span> <span class="ot">=</span> <span class="st">"Metacritic users"</span>,</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"IMDB_norm_round"</span> <span class="ot">=</span> <span class="st">"IMDb users"</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co"># List of variables to plot</span></span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>variables <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Fandango_Stars"</span>, <span class="st">"RT_norm_round"</span>, <span class="st">"RT_user_norm_round"</span>, </span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Metacritic_norm_round"</span>, <span class="st">"Metacritic_user_norm_round"</span>, <span class="st">"IMDB_norm_round"</span>)</span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to generate and save distribution plots</span></span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>generate_distribution_plots <span class="ot">&lt;-</span> <span class="cf">function</span>(variable) {</span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create the plot (density plot in this case)</span></span>
-<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data, <span class="fu">aes_string</span>(<span class="at">x =</span> variable)) <span class="sc">+</span> </span>
-<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">"skyblue"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
-<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
-<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Save the plot as PNG</span></span>
-<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>  file_name <span class="ot">&lt;-</span> <span class="fu">paste0</span>( variable, <span class="st">"_distribution.png"</span>)</span>
-<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggsave</span>(file_name, <span class="at">plot =</span> p, <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">6</span>)</span>
-<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Return the file path</span></span>
-<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(file_name)</span>
-<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate and save the distribution plots for each variable</span></span>
-<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>plot_paths <span class="ot">&lt;-</span> <span class="fu">sapply</span>(variables, generate_distribution_plots)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the data</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"fandango_score_comparison.csv"</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Descriptive platform names</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>platform_names <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Fandango_Stars"</span> <span class="ot">=</span> <span class="st">"Fandango"</span>,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"RT_norm_round"</span> <span class="ot">=</span> <span class="st">"Rotten Tomatoes"</span>,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"RT_user_norm_round"</span> <span class="ot">=</span> <span class="st">"Rotten Tomatoes users"</span>,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Metacritic_norm_round"</span> <span class="ot">=</span> <span class="st">"Metacritic"</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Metacritic_user_norm_round"</span> <span class="ot">=</span> <span class="st">"Metacritic users"</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"IMDB_norm_round"</span> <span class="ot">=</span> <span class="st">"IMDb users"</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co"># List of variables to plot</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>variables <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Fandango_Stars"</span>, <span class="st">"RT_norm_round"</span>, <span class="st">"RT_user_norm_round"</span>, </span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Metacritic_norm_round"</span>, <span class="st">"Metacritic_user_norm_round"</span>, <span class="st">"IMDB_norm_round"</span>)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to generate and save distribution plots</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>generate_distribution_plots <span class="ot">&lt;-</span> <span class="cf">function</span>(variable) {</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create the plot (density plot in this case)</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data, <span class="fu">aes_string</span>(<span class="at">x =</span> variable)) <span class="sc">+</span> </span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">"skyblue"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Save the plot as PNG</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>  file_name <span class="ot">&lt;-</span> <span class="fu">paste0</span>( variable, <span class="st">"_distribution.png"</span>)</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggsave</span>(file_name, <span class="at">plot =</span> p, <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">6</span>)</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Return the file path</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(file_name)</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate and save the distribution plots for each variable</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>plot_paths <span class="ot">&lt;-</span> <span class="fu">sapply</span>(variables, generate_distribution_plots)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: `aes_string()` was deprecated in ggplot2 3.0.0.
 ℹ Please use tidy evaluation idioms with `aes()`.
 ℹ See also `vignette("ggplot2-in-packages")` for more information.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to generate image file paths (replace with real image paths)</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>generate_image_path <span class="ot">&lt;-</span> <span class="cf">function</span>(platform_name) {</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># For demonstration, I use a placeholder image name (replace with your actual images)</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  image_urls <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Fandango"</span> <span class="ot">=</span> <span class="st">"Fandango_Stars_distribution.png"</span>,</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Rotten Tomatoes"</span> <span class="ot">=</span> <span class="st">"RT_norm_round_distribution.png"</span>,</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Rotten Tomatoes users"</span> <span class="ot">=</span> <span class="st">"RT_user_norm_round_distribution.png"</span>,</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Metacritic"</span> <span class="ot">=</span> <span class="st">"IMDB_norm_round_distribution.png"</span>,</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Metacritic users"</span> <span class="ot">=</span> <span class="st">"Metacritic_norm_round_distribution.png"</span>,</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"IMDb users"</span> <span class="ot">=</span> <span class="st">"Metacritic_user_norm_round_distribution.png"</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(image_urls[platform_name])</span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute summary statistics for each platform</span></span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>summary_stats <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Platform</span><span class="st">`</span> <span class="ot">=</span> platform_names[<span class="st">"Fandango_Stars"</span>],</span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Mean (SD)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">paste0</span>(<span class="fu">round</span>(<span class="fu">mean</span>(Fandango_Stars), <span class="dv">2</span>), <span class="st">" ("</span>, <span class="fu">round</span>(<span class="fu">sd</span>(Fandango_Stars), <span class="dv">2</span>), <span class="st">")"</span>),</span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Median (Q1, Q3)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">paste0</span>(<span class="fu">round</span>(<span class="fu">median</span>(Fandango_Stars), <span class="dv">2</span>), <span class="st">" ("</span>, </span>
-<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">round</span>(<span class="fu">quantile</span>(Fandango_Stars, <span class="fl">0.25</span>), <span class="dv">2</span>), <span class="st">", "</span>, </span>
-<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">round</span>(<span class="fu">quantile</span>(Fandango_Stars, <span class="fl">0.75</span>), <span class="dv">2</span>), <span class="st">")"</span>),</span>
-<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">Min =</span> <span class="fu">round</span>(<span class="fu">min</span>(Fandango_Stars), <span class="dv">2</span>),</span>
-<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">Max =</span> <span class="fu">round</span>(<span class="fu">max</span>(Fandango_Stars), <span class="dv">2</span>),</span>
-<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">Distribution =</span> <span class="fu">generate_image_path</span>(<span class="st">"Fandango"</span>)  <span class="co"># Add image path for Fandango</span></span>
-<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Platforms for which summary statistics are needed</span></span>
-<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>platforms <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"RT_norm_round"</span>, <span class="st">"RT_user_norm_round"</span>, <span class="st">"Metacritic_norm_round"</span>, </span>
-<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Metacritic_user_norm_round"</span>, <span class="st">"IMDB_norm_round"</span>)</span>
-<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute summary statistics for each platform and append them</span></span>
-<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (platform <span class="cf">in</span> platforms) {</span>
-<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>  stats <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
-<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
-<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">Platform</span><span class="st">`</span> <span class="ot">=</span> platform_names[platform],</span>
-<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">Mean (SD)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">paste0</span>(<span class="fu">round</span>(<span class="fu">mean</span>(<span class="fu">get</span>(platform)), <span class="dv">2</span>), <span class="st">" ("</span>, <span class="fu">round</span>(<span class="fu">sd</span>(<span class="fu">get</span>(platform)), <span class="dv">2</span>), <span class="st">")"</span>),</span>
-<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">Median (Q1, Q3)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">paste0</span>(<span class="fu">round</span>(<span class="fu">median</span>(<span class="fu">get</span>(platform)), <span class="dv">2</span>), <span class="st">" ("</span>, </span>
-<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>                                 <span class="fu">round</span>(<span class="fu">quantile</span>(<span class="fu">get</span>(platform), <span class="fl">0.25</span>), <span class="dv">2</span>), <span class="st">", "</span>, </span>
-<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>                                 <span class="fu">round</span>(<span class="fu">quantile</span>(<span class="fu">get</span>(platform), <span class="fl">0.75</span>), <span class="dv">2</span>), <span class="st">")"</span>),</span>
-<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>      <span class="at">Min =</span> <span class="fu">round</span>(<span class="fu">min</span>(<span class="fu">get</span>(platform)), <span class="dv">2</span>),</span>
-<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>      <span class="at">Max =</span> <span class="fu">round</span>(<span class="fu">max</span>(<span class="fu">get</span>(platform)), <span class="dv">2</span>),</span>
-<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>      <span class="at">Distribution =</span> <span class="fu">generate_image_path</span>(platform_names[platform])  <span class="co"># Add image path for each platform</span></span>
-<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Append the stats to summary_stats</span></span>
-<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>  summary_stats <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(summary_stats, stats)</span>
-<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the table with summary statistics and image column</span></span>
-<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>final_table <span class="ot">&lt;-</span> summary_stats <span class="sc">%&gt;%</span></span>
-<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Adding header that spans multiple columns</span></span>
-<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
-<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Summary Statistics for Movie Rating Platforms"</span>,</span>
-<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Comparison of Ratings on Different Platforms"</span></span>
-<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_spanner</span>(</span>
-<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">md</span>(<span class="st">"**Summary Statistics**"</span>),</span>
-<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="fu">c</span>(<span class="st">`</span><span class="at">Mean (SD)</span><span class="st">`</span>, <span class="st">`</span><span class="at">Median (Q1, Q3)</span><span class="st">`</span>, Min, Max)</span>
-<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Adding a descriptive footnote for statistics</span></span>
-<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_footnote</span>(</span>
-<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a>    <span class="at">footnote =</span> <span class="fu">md</span>(<span class="st">"Summary statistics (mean, median, min, max) for different movie rating platforms."</span>),</span>
-<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">cells_column_labels</span>(<span class="at">columns =</span> <span class="st">`</span><span class="at">Mean (SD)</span><span class="st">`</span>)</span>
-<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Adding a source note with explanation</span></span>
-<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(</span>
-<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a>    <span class="at">source_note =</span> <span class="fu">md</span>(<span class="st">"**Table 1 caption:** This table compares summary statistics like mean, median, min, and max for ratings across various platforms."</span>)</span>
-<span id="cb15-71"><a href="#cb15-71" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb15-72"><a href="#cb15-72" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Bold specific column labels: Mean (SD), Median (Q1, Q3), Min, Max</span></span>
-<span id="cb15-73"><a href="#cb15-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_style</span>(</span>
-<span id="cb15-74"><a href="#cb15-74" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="fu">cell_text</span>(<span class="at">weight =</span> <span class="st">"bold"</span>),</span>
-<span id="cb15-75"><a href="#cb15-75" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">cells_column_labels</span>(<span class="at">columns =</span> <span class="fu">c</span>(<span class="st">"Mean (SD)"</span>, <span class="st">"Median (Q1, Q3)"</span>, <span class="st">"Min"</span>, <span class="st">"Max"</span>))</span>
-<span id="cb15-76"><a href="#cb15-76" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb15-77"><a href="#cb15-77" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Highlighting the "Mean (SD)" cell for "Fandango"</span></span>
-<span id="cb15-78"><a href="#cb15-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_style</span>(</span>
-<span id="cb15-79"><a href="#cb15-79" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="fu">cell_fill</span>(<span class="at">color =</span> <span class="st">"lightblue"</span>),  <span class="co"># Highlight color</span></span>
-<span id="cb15-80"><a href="#cb15-80" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">cells_body</span>(</span>
-<span id="cb15-81"><a href="#cb15-81" aria-hidden="true" tabindex="-1"></a>      <span class="at">rows =</span> summary_stats<span class="sc">$</span>Platform <span class="sc">==</span> <span class="st">"Fandango"</span>,  <span class="co"># Targeting Fandango row</span></span>
-<span id="cb15-82"><a href="#cb15-82" aria-hidden="true" tabindex="-1"></a>      <span class="at">columns =</span> <span class="st">"Mean (SD)"</span></span>
-<span id="cb15-83"><a href="#cb15-83" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb15-84"><a href="#cb15-84" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb15-85"><a href="#cb15-85" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Displaying images in the new 'Image' column</span></span>
-<span id="cb15-86"><a href="#cb15-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_image</span>(</span>
-<span id="cb15-87"><a href="#cb15-87" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="st">"Distribution"</span>,</span>
-<span id="cb15-88"><a href="#cb15-88" aria-hidden="true" tabindex="-1"></a>    <span class="at">rows =</span> <span class="fu">everything</span>(),</span>
-<span id="cb15-89"><a href="#cb15-89" aria-hidden="true" tabindex="-1"></a>    <span class="at">path =</span> <span class="cn">NULL</span>,  <span class="co"># Path is not required if you're using URLs</span></span>
-<span id="cb15-90"><a href="#cb15-90" aria-hidden="true" tabindex="-1"></a>    <span class="at">file_pattern =</span> <span class="st">"{x}"</span>,</span>
-<span id="cb15-91"><a href="#cb15-91" aria-hidden="true" tabindex="-1"></a>    <span class="at">encode =</span> <span class="cn">TRUE</span></span>
-<span id="cb15-92"><a href="#cb15-92" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb15-93"><a href="#cb15-93" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-94"><a href="#cb15-94" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the table</span></span>
-<span id="cb15-95"><a href="#cb15-95" aria-hidden="true" tabindex="-1"></a>final_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to generate image file paths (replace with real image paths)</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>generate_image_path <span class="ot">&lt;-</span> <span class="cf">function</span>(platform_name) {</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># For demonstration, I use a placeholder image name (replace with your actual images)</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  image_urls <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Fandango"</span> <span class="ot">=</span> <span class="st">"Fandango_Stars_distribution.png"</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Rotten Tomatoes"</span> <span class="ot">=</span> <span class="st">"RT_norm_round_distribution.png"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Rotten Tomatoes users"</span> <span class="ot">=</span> <span class="st">"RT_user_norm_round_distribution.png"</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Metacritic"</span> <span class="ot">=</span> <span class="st">"IMDB_norm_round_distribution.png"</span>,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Metacritic users"</span> <span class="ot">=</span> <span class="st">"Metacritic_norm_round_distribution.png"</span>,</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"IMDb users"</span> <span class="ot">=</span> <span class="st">"Metacritic_user_norm_round_distribution.png"</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(image_urls[platform_name])</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute summary statistics for each platform</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>summary_stats <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Platform</span><span class="st">`</span> <span class="ot">=</span> platform_names[<span class="st">"Fandango_Stars"</span>],</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Mean (SD)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">paste0</span>(<span class="fu">round</span>(<span class="fu">mean</span>(Fandango_Stars), <span class="dv">2</span>), <span class="st">" ("</span>, <span class="fu">round</span>(<span class="fu">sd</span>(Fandango_Stars), <span class="dv">2</span>), <span class="st">")"</span>),</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Median (Q1, Q3)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">paste0</span>(<span class="fu">round</span>(<span class="fu">median</span>(Fandango_Stars), <span class="dv">2</span>), <span class="st">" ("</span>, </span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">round</span>(<span class="fu">quantile</span>(Fandango_Stars, <span class="fl">0.25</span>), <span class="dv">2</span>), <span class="st">", "</span>, </span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">round</span>(<span class="fu">quantile</span>(Fandango_Stars, <span class="fl">0.75</span>), <span class="dv">2</span>), <span class="st">")"</span>),</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">Min =</span> <span class="fu">round</span>(<span class="fu">min</span>(Fandango_Stars), <span class="dv">2</span>),</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">Max =</span> <span class="fu">round</span>(<span class="fu">max</span>(Fandango_Stars), <span class="dv">2</span>),</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">Distribution =</span> <span class="fu">generate_image_path</span>(<span class="st">"Fandango"</span>)  <span class="co"># Add image path for Fandango</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Platforms for which summary statistics are needed</span></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>platforms <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"RT_norm_round"</span>, <span class="st">"RT_user_norm_round"</span>, <span class="st">"Metacritic_norm_round"</span>, </span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Metacritic_user_norm_round"</span>, <span class="st">"IMDB_norm_round"</span>)</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute summary statistics for each platform and append them</span></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (platform <span class="cf">in</span> platforms) {</span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>  stats <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">Platform</span><span class="st">`</span> <span class="ot">=</span> platform_names[platform],</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">Mean (SD)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">paste0</span>(<span class="fu">round</span>(<span class="fu">mean</span>(<span class="fu">get</span>(platform)), <span class="dv">2</span>), <span class="st">" ("</span>, <span class="fu">round</span>(<span class="fu">sd</span>(<span class="fu">get</span>(platform)), <span class="dv">2</span>), <span class="st">")"</span>),</span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">Median (Q1, Q3)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">paste0</span>(<span class="fu">round</span>(<span class="fu">median</span>(<span class="fu">get</span>(platform)), <span class="dv">2</span>), <span class="st">" ("</span>, </span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>                                 <span class="fu">round</span>(<span class="fu">quantile</span>(<span class="fu">get</span>(platform), <span class="fl">0.25</span>), <span class="dv">2</span>), <span class="st">", "</span>, </span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>                                 <span class="fu">round</span>(<span class="fu">quantile</span>(<span class="fu">get</span>(platform), <span class="fl">0.75</span>), <span class="dv">2</span>), <span class="st">")"</span>),</span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>      <span class="at">Min =</span> <span class="fu">round</span>(<span class="fu">min</span>(<span class="fu">get</span>(platform)), <span class="dv">2</span>),</span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>      <span class="at">Max =</span> <span class="fu">round</span>(<span class="fu">max</span>(<span class="fu">get</span>(platform)), <span class="dv">2</span>),</span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>      <span class="at">Distribution =</span> <span class="fu">generate_image_path</span>(platform_names[platform])  <span class="co"># Add image path for each platform</span></span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Append the stats to summary_stats</span></span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a>  summary_stats <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(summary_stats, stats)</span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the table with summary statistics and image column</span></span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a>final_table <span class="ot">&lt;-</span> summary_stats <span class="sc">%&gt;%</span></span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Adding header that spans multiple columns</span></span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Summary Statistics for Movie Rating Platforms"</span>,</span>
+<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Comparison of Ratings on Different Platforms"</span></span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_spanner</span>(</span>
+<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">md</span>(<span class="st">"**Summary Statistics**"</span>),</span>
+<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="fu">c</span>(<span class="st">`</span><span class="at">Mean (SD)</span><span class="st">`</span>, <span class="st">`</span><span class="at">Median (Q1, Q3)</span><span class="st">`</span>, Min, Max)</span>
+<span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb12-63"><a href="#cb12-63" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Adding a descriptive footnote for statistics</span></span>
+<span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_footnote</span>(</span>
+<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a>    <span class="at">footnote =</span> <span class="fu">md</span>(<span class="st">"Summary statistics (mean, median, min, max) for different movie rating platforms."</span>),</span>
+<span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">cells_column_labels</span>(<span class="at">columns =</span> <span class="st">`</span><span class="at">Mean (SD)</span><span class="st">`</span>)</span>
+<span id="cb12-67"><a href="#cb12-67" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb12-68"><a href="#cb12-68" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Adding a source note with explanation</span></span>
+<span id="cb12-69"><a href="#cb12-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(</span>
+<span id="cb12-70"><a href="#cb12-70" aria-hidden="true" tabindex="-1"></a>    <span class="at">source_note =</span> <span class="fu">md</span>(<span class="st">"**Table 1 caption:** This table compares summary statistics like mean, median, min, and max for ratings across various platforms."</span>)</span>
+<span id="cb12-71"><a href="#cb12-71" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb12-72"><a href="#cb12-72" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Bold specific column labels: Mean (SD), Median (Q1, Q3), Min, Max</span></span>
+<span id="cb12-73"><a href="#cb12-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_style</span>(</span>
+<span id="cb12-74"><a href="#cb12-74" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="fu">cell_text</span>(<span class="at">weight =</span> <span class="st">"bold"</span>),</span>
+<span id="cb12-75"><a href="#cb12-75" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">cells_column_labels</span>(<span class="at">columns =</span> <span class="fu">c</span>(<span class="st">"Mean (SD)"</span>, <span class="st">"Median (Q1, Q3)"</span>, <span class="st">"Min"</span>, <span class="st">"Max"</span>))</span>
+<span id="cb12-76"><a href="#cb12-76" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb12-77"><a href="#cb12-77" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Highlighting the "Mean (SD)" cell for "Fandango"</span></span>
+<span id="cb12-78"><a href="#cb12-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_style</span>(</span>
+<span id="cb12-79"><a href="#cb12-79" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="fu">cell_fill</span>(<span class="at">color =</span> <span class="st">"lightblue"</span>),  <span class="co"># Highlight color</span></span>
+<span id="cb12-80"><a href="#cb12-80" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">cells_body</span>(</span>
+<span id="cb12-81"><a href="#cb12-81" aria-hidden="true" tabindex="-1"></a>      <span class="at">rows =</span> summary_stats<span class="sc">$</span>Platform <span class="sc">==</span> <span class="st">"Fandango"</span>,  <span class="co"># Targeting Fandango row</span></span>
+<span id="cb12-82"><a href="#cb12-82" aria-hidden="true" tabindex="-1"></a>      <span class="at">columns =</span> <span class="st">"Mean (SD)"</span></span>
+<span id="cb12-83"><a href="#cb12-83" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-84"><a href="#cb12-84" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb12-85"><a href="#cb12-85" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Displaying images in the new 'Image' column</span></span>
+<span id="cb12-86"><a href="#cb12-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_image</span>(</span>
+<span id="cb12-87"><a href="#cb12-87" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="st">"Distribution"</span>,</span>
+<span id="cb12-88"><a href="#cb12-88" aria-hidden="true" tabindex="-1"></a>    <span class="at">rows =</span> <span class="fu">everything</span>(),</span>
+<span id="cb12-89"><a href="#cb12-89" aria-hidden="true" tabindex="-1"></a>    <span class="at">path =</span> <span class="cn">NULL</span>,  <span class="co"># Path is not required if you're using URLs</span></span>
+<span id="cb12-90"><a href="#cb12-90" aria-hidden="true" tabindex="-1"></a>    <span class="at">file_pattern =</span> <span class="st">"{x}"</span>,</span>
+<span id="cb12-91"><a href="#cb12-91" aria-hidden="true" tabindex="-1"></a>    <span class="at">encode =</span> <span class="cn">TRUE</span></span>
+<span id="cb12-92"><a href="#cb12-92" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-93"><a href="#cb12-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-94"><a href="#cb12-94" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the table</span></span>
+<span id="cb12-95"><a href="#cb12-95" aria-hidden="true" tabindex="-1"></a>final_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="wdldgcjxra" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#wdldgcjxra table {
+<div id="yjnlthiizo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#yjnlthiizo table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#wdldgcjxra thead, #wdldgcjxra tbody, #wdldgcjxra tfoot, #wdldgcjxra tr, #wdldgcjxra td, #wdldgcjxra th {
+#yjnlthiizo thead, #yjnlthiizo tbody, #yjnlthiizo tfoot, #yjnlthiizo tr, #yjnlthiizo td, #yjnlthiizo th {
   border-style: none;
 }
 
-#wdldgcjxra p {
+#yjnlthiizo p {
   margin: 0;
   padding: 0;
 }
 
-#wdldgcjxra .gt_table {
+#yjnlthiizo .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -626,12 +617,12 @@ Attaching package: 'kableExtra'</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#wdldgcjxra .gt_caption {
+#yjnlthiizo .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#wdldgcjxra .gt_title {
+#yjnlthiizo .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -643,7 +634,7 @@ Attaching package: 'kableExtra'</code></pre>
   border-bottom-width: 0;
 }
 
-#wdldgcjxra .gt_subtitle {
+#yjnlthiizo .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -655,7 +646,7 @@ Attaching package: 'kableExtra'</code></pre>
   border-top-width: 0;
 }
 
-#wdldgcjxra .gt_heading {
+#yjnlthiizo .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -667,13 +658,13 @@ Attaching package: 'kableExtra'</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#wdldgcjxra .gt_bottom_border {
+#yjnlthiizo .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#wdldgcjxra .gt_col_headings {
+#yjnlthiizo .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -688,7 +679,7 @@ Attaching package: 'kableExtra'</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#wdldgcjxra .gt_col_heading {
+#yjnlthiizo .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -708,7 +699,7 @@ Attaching package: 'kableExtra'</code></pre>
   overflow-x: hidden;
 }
 
-#wdldgcjxra .gt_column_spanner_outer {
+#yjnlthiizo .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -720,15 +711,15 @@ Attaching package: 'kableExtra'</code></pre>
   padding-right: 4px;
 }
 
-#wdldgcjxra .gt_column_spanner_outer:first-child {
+#yjnlthiizo .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#wdldgcjxra .gt_column_spanner_outer:last-child {
+#yjnlthiizo .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#wdldgcjxra .gt_column_spanner {
+#yjnlthiizo .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -740,11 +731,11 @@ Attaching package: 'kableExtra'</code></pre>
   width: 100%;
 }
 
-#wdldgcjxra .gt_spanner_row {
+#yjnlthiizo .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#wdldgcjxra .gt_group_heading {
+#yjnlthiizo .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -770,7 +761,7 @@ Attaching package: 'kableExtra'</code></pre>
   text-align: left;
 }
 
-#wdldgcjxra .gt_empty_group_heading {
+#yjnlthiizo .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -785,15 +776,15 @@ Attaching package: 'kableExtra'</code></pre>
   vertical-align: middle;
 }
 
-#wdldgcjxra .gt_from_md > :first-child {
+#yjnlthiizo .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#wdldgcjxra .gt_from_md > :last-child {
+#yjnlthiizo .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#wdldgcjxra .gt_row {
+#yjnlthiizo .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -812,7 +803,7 @@ Attaching package: 'kableExtra'</code></pre>
   overflow-x: hidden;
 }
 
-#wdldgcjxra .gt_stub {
+#yjnlthiizo .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -825,7 +816,7 @@ Attaching package: 'kableExtra'</code></pre>
   padding-right: 5px;
 }
 
-#wdldgcjxra .gt_stub_row_group {
+#yjnlthiizo .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -839,15 +830,15 @@ Attaching package: 'kableExtra'</code></pre>
   vertical-align: top;
 }
 
-#wdldgcjxra .gt_row_group_first td {
+#yjnlthiizo .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#wdldgcjxra .gt_row_group_first th {
+#yjnlthiizo .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#wdldgcjxra .gt_summary_row {
+#yjnlthiizo .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -857,16 +848,16 @@ Attaching package: 'kableExtra'</code></pre>
   padding-right: 5px;
 }
 
-#wdldgcjxra .gt_first_summary_row {
+#yjnlthiizo .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#wdldgcjxra .gt_first_summary_row.thick {
+#yjnlthiizo .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#wdldgcjxra .gt_last_summary_row {
+#yjnlthiizo .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -876,7 +867,7 @@ Attaching package: 'kableExtra'</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#wdldgcjxra .gt_grand_summary_row {
+#yjnlthiizo .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -886,7 +877,7 @@ Attaching package: 'kableExtra'</code></pre>
   padding-right: 5px;
 }
 
-#wdldgcjxra .gt_first_grand_summary_row {
+#yjnlthiizo .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -896,7 +887,7 @@ Attaching package: 'kableExtra'</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#wdldgcjxra .gt_last_grand_summary_row_top {
+#yjnlthiizo .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -906,11 +897,11 @@ Attaching package: 'kableExtra'</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#wdldgcjxra .gt_striped {
+#yjnlthiizo .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#wdldgcjxra .gt_table_body {
+#yjnlthiizo .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -919,7 +910,7 @@ Attaching package: 'kableExtra'</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#wdldgcjxra .gt_footnotes {
+#yjnlthiizo .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -933,7 +924,7 @@ Attaching package: 'kableExtra'</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#wdldgcjxra .gt_footnote {
+#yjnlthiizo .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -942,7 +933,7 @@ Attaching package: 'kableExtra'</code></pre>
   padding-right: 5px;
 }
 
-#wdldgcjxra .gt_sourcenotes {
+#yjnlthiizo .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -956,7 +947,7 @@ Attaching package: 'kableExtra'</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#wdldgcjxra .gt_sourcenote {
+#yjnlthiizo .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -964,72 +955,72 @@ Attaching package: 'kableExtra'</code></pre>
   padding-right: 5px;
 }
 
-#wdldgcjxra .gt_left {
+#yjnlthiizo .gt_left {
   text-align: left;
 }
 
-#wdldgcjxra .gt_center {
+#yjnlthiizo .gt_center {
   text-align: center;
 }
 
-#wdldgcjxra .gt_right {
+#yjnlthiizo .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#wdldgcjxra .gt_font_normal {
+#yjnlthiizo .gt_font_normal {
   font-weight: normal;
 }
 
-#wdldgcjxra .gt_font_bold {
+#yjnlthiizo .gt_font_bold {
   font-weight: bold;
 }
 
-#wdldgcjxra .gt_font_italic {
+#yjnlthiizo .gt_font_italic {
   font-style: italic;
 }
 
-#wdldgcjxra .gt_super {
+#yjnlthiizo .gt_super {
   font-size: 65%;
 }
 
-#wdldgcjxra .gt_footnote_marks {
+#yjnlthiizo .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#wdldgcjxra .gt_asterisk {
+#yjnlthiizo .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#wdldgcjxra .gt_indent_1 {
+#yjnlthiizo .gt_indent_1 {
   text-indent: 5px;
 }
 
-#wdldgcjxra .gt_indent_2 {
+#yjnlthiizo .gt_indent_2 {
   text-indent: 10px;
 }
 
-#wdldgcjxra .gt_indent_3 {
+#yjnlthiizo .gt_indent_3 {
   text-indent: 15px;
 }
 
-#wdldgcjxra .gt_indent_4 {
+#yjnlthiizo .gt_indent_4 {
   text-indent: 20px;
 }
 
-#wdldgcjxra .gt_indent_5 {
+#yjnlthiizo .gt_indent_5 {
   text-indent: 25px;
 }
 
-#wdldgcjxra .katex-display {
+#yjnlthiizo .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#wdldgcjxra div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#yjnlthiizo div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>

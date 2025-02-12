@@ -225,7 +225,7 @@ Since I tried for a few hours and ChatGPT still could not add a column of sparkl
 ```{r}
 
 # Load libraries
-library(kableExtra)
+#library(kableExtra)
 library(gt)
 library(dplyr)
 

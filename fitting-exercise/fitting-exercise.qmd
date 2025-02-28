@@ -1,0 +1,303 @@
+---
+title: "Fitting Exercise"
+---
+
+## Data processing and exploration
+```{r, warning=FALSE, message=FALSE}
+# Load packages
+library(ggplot2)
+library(dplyr)
+library(here)
+
+# Load the dataset
+data <- read.csv(here("fitting-exercise", "Mavoglurant_A2121_nmpk.csv"))
+
+# Create the plot with facets by DOSE, showing both lines and points
+ggplot(data, aes(x = TIME, y = DV, group = ID)) +
+  geom_line(color = "lightblue") +  # Add lines
+  geom_point(color = "skyblue") +  # Add points
+  facet_wrap(~ DOSE) +  # Facet by dose with the same y-axis scale
+  labs(title = "DV over Time Stratified by DOSE",
+       x = "Time",
+       y = "DV") +
+  theme_minimal() +
+  theme(strip.text = element_text(face = "bold"))
+
+# Filter to keep only observations where OCC == 1
+data1 <- data %>% filter(OCC == 1)
+
+# Exclude observations where TIME = 0 and compute the sum of DV for each individual
+data_sum <- data1 %>%
+  filter(TIME != 0) %>%
+  group_by(ID) %>%
+  summarize(Y = sum(DV))  # Sum DV for each ID
+
+dim(data_sum)
+
+# Create a data frame with only observations where TIME == 0
+data_time0 <- data1 %>%
+  filter(TIME == 0)
+
+dim(data_time0)
+
+# Join the two data frames by ID to create the final dataset
+joint_data <- left_join(data_time0, data_sum, by = "ID")
+
+dim(joint_data)
+
+# Convert RACE and SEX to factors and keep only the required columns
+final_data <- joint_data %>%
+  mutate(RACE = as.factor(RACE),
+         SEX = as.factor(SEX)) %>%
+  select(Y, DOSE, AGE, SEX, RACE, WT, HT)
+
+# View the resulting data frame
+head(final_data)
+```
+
+## EDA
+
+First make summary table of the variables:
+```{r, warning=FALSE, message=FALSE}
+
+# Load package
+library(gtsummary)
+
+# Summary statistics for variables
+tbl_summary(final_data)
+```
+The table provides an overview of the data, highlighting three dose treatments: 25, 37.5, and 50. The high and low doses make up the majority, while the medium dose (37.5) accounts for only 12% of the observations. Additionally, there are four different race categories, encoded as 1, 2, 7, and 88, with categories 1 and 2 being the most prevalent.
+
+```{r, warning=FALSE, message=FALSE}
+# Load packages
+library(ggplot2)
+library(dplyr)
+
+# Create a function to generate histograms
+plot_histogram <- function(data, var, binwidth = NULL) {
+  ggplot(data, aes(x = !!sym(var))) +
+    geom_histogram(aes(y = ..density..), fill = "skyblue", color = "black", bins = 30) +
+    geom_density(color = "pink", linewidth = 1) +  # Overlay density curve
+    labs(title = paste("Histogram of", var), x = var, y = "Density") +
+    theme_minimal()
+}
+
+# Plot histograms for Y, AGE, WT, and HT
+hist_Y <- plot_histogram(final_data, "Y")
+hist_AGE <- plot_histogram(final_data, "AGE")
+hist_WT <- plot_histogram(final_data, "WT")
+hist_HT <- plot_histogram(final_data, "HT")
+
+# Print plots
+print(hist_Y)
+print(hist_AGE)
+print(hist_WT)
+print(hist_HT)
+
+```
+Y exhibits a right-skewed distribution, indicating that most values are concentrated on the lower end, with a few higher values extending the tail to the right.
+AGE follows a bimodal distribution, suggesting the presence of two distinct age groups in the dataset.
+WT (Weight) appears to be approximately normally distributed.
+HT (Height) shows a left-skewed distribution, where most values are on the higher end, with a tail extending towards lower values.
+
+Now make some scatterplots/boxplots between Y and other predictors.
+```{r, warning=FALSE, message=FALSE}
+# Load necessary library
+library(ggplot2)
+library(dplyr)
+
+# Boxplots for Y vs categorical variables
+boxplot_dose <- ggplot(final_data, aes(x = as.factor(DOSE), y = Y)) + #although DOSE is a continuous variable, it only has three values, so box plot will be clearer to display the relationship
+  geom_boxplot(fill = "pink", color = "black") +
+  labs(title = "Boxplot of Y vs Dose", x = "Dose", y = "Y") +
+  theme_minimal()
+
+boxplot_sex <- ggplot(final_data, aes(x = SEX, y = Y)) +
+  geom_boxplot(fill = "pink", color = "black") +
+  labs(title = "Boxplot of Y vs Sex", x = "Sex", y = "Y") +
+  theme_minimal()
+
+boxplot_race <- ggplot(final_data, aes(x = RACE, y = Y)) +
+  geom_boxplot(fill = "pink", color = "black") +
+  labs(title = "Boxplot of Y vs Race", x = "Race", y = "Y") +
+  theme_minimal()
+
+# Scatter plots for Y vs continuous variables
+scatter_age <- ggplot(final_data, aes(x = AGE, y = Y)) +
+  geom_point(alpha = 0.6, color = "orange") +
+  geom_smooth(method = "lm", color = "black", se = FALSE) +  # Add trend line
+  labs(title = "Scatter Plot of Y vs Age", x = "Age", y = "Y") +
+  theme_minimal()
+
+scatter_wt <- ggplot(final_data, aes(x = WT, y = Y)) +
+  geom_point(alpha = 0.6, color = "orange") +
+  geom_smooth(method = "lm", color = "black", se = FALSE) +
+  labs(title = "Scatter Plot of Y vs Weight", x = "Weight", y = "Y") +
+  theme_minimal()
+
+scatter_ht <- ggplot(final_data, aes(x = HT, y = Y)) +
+  geom_point(alpha = 0.6, color = "orange") +
+  geom_smooth(method = "lm", color = "black", se = FALSE) +
+  labs(title = "Scatter Plot of Y vs Height", x = "Height", y = "Y") +
+  theme_minimal()
+
+# Print the plots
+print(boxplot_dose)
+print(boxplot_sex)
+print(boxplot_race)
+print(scatter_age)
+print(scatter_wt)
+print(scatter_ht)
+
+```
+From the plots, we observe a positive correlation between Y and dose. However, sex and race do not appear to have a significant impact on Y. There is no clear correlation between age and Y, while weight and height show weak negative correlations with Y.
+
+Make pair plots and correlation matrix.
+```{r, warning=FALSE, message=FALSE}
+# Load packages
+library(GGally)
+library(ggplot2)
+library(corrplot)
+
+# Generate a pairwise plot (GGally's ggpairs)
+ggpairs(final_data, 
+        mapping = aes(color = SEX),  # Color by SEX
+        upper = list(continuous = "cor"),  # Show correlation in upper panel
+        lower = list(continuous = "smooth"),  # Smoothed scatter plots in lower panel
+        diag = list(continuous = "density"))  # Density plots on the diagonal
+
+# Compute correlation matrix
+numeric_vars <- final_data %>% select(where(is.numeric))  # Select only numeric columns
+cor_matrix <- cor(numeric_vars, use = "complete.obs")  # Compute correlations
+
+# Plot correlation matrix
+corrplot(cor_matrix, method = "color", type = "lower", addCoef.col = "black",
+         tl.col = "black", tl.srt = 45)
+
+
+```
+From the correlation matrix, there appear to be potential correlations between Y and DOSE, as well as between height (HT) and weight (WT).
+
+## Model fitting
+
+### Linear Model
+1. Fit a linear model to Y using the main predictor DOSE.
+2. Fit a linear model to Y using all predictors.
+3. Compute RMSE and R-squared and print them.
+```{r, warning=FALSE, message=FALSE}
+# Load packages
+library(tidymodels)
+library(dplyr)
+
+# Set up a workflow for model1: Y ~ DOSE
+model1_spec <- linear_reg() %>% 
+  set_engine("lm")
+
+model1_workflow <- workflow() %>% 
+  add_formula(Y ~ DOSE) %>%
+  add_model(model1_spec)
+
+# Fit the model1
+model1_fit <- fit(model1_workflow, data = final_data)
+
+# Set up a workflow for model2: Y ~ all predictors
+model2_spec <- linear_reg() %>% 
+  set_engine("lm")
+
+model2_workflow <- workflow() %>% 
+  add_formula(Y ~ .) %>%
+  add_model(model2_spec)
+
+# Fit the model2
+model2_fit <- fit(model2_workflow, data = final_data)
+
+# Tidy the model summaries (coefficients)
+tidy_model1 <- tidy(model1_fit)
+tidy_model2 <- tidy(model2_fit)
+
+# Print nicely
+print(tidy_model1)
+print(tidy_model2)
+
+# Compute performance metrics for model1 and model2
+metrics1 <- model1_fit %>% 
+  predict(final_data) %>% 
+  bind_cols(final_data) %>%
+  metrics(truth = Y, estimate = .pred)
+
+metrics2 <- model2_fit %>% 
+  predict(final_data) %>% 
+  bind_cols(final_data) %>%
+  metrics(truth = Y, estimate = .pred)
+
+# Extract and print RMSE and R-squared for both models
+cat("Model 1 (Y ~ DOSE):\n")
+cat("RMSE:", round(metrics1 %>% filter(.metric == "rmse") %>% pull(.estimate), 2), "\n")
+cat("R-squared:", round(metrics1 %>% filter(.metric == "rsq") %>% pull(.estimate), 4), "\n\n")
+
+cat("Model 2 (Y ~ all predictors):\n")
+cat("  RMSE:", round(metrics2 %>% filter(.metric == "rmse") %>% pull(.estimate), 2), "\n")
+cat("  R-squared:", round(metrics2 %>% filter(.metric == "rsq") %>% pull(.estimate), 4), "\n")
+```
+From the linear model Y ~ DOSE, we observe a strong positive correlation between Y and dose, with a coefficient of 58.2. The model's RMSE is 666.46, and the R-squared value is 0.5156.
+
+In the full model (Y ~ all predictors), the coefficient of DOSE remains similar to the first model (59.9 vs. 58.2), suggesting its strong influence on Y. Additionally, weight (WT) shows a negative correlation with Y, with a coefficient of -23.0. This model performs better, with a lower RMSE of 590.85 and a higher R-squared of 0.6193, indicating that incorporating additional predictors improves the model's explanatory power.
+
+### Logistic Model
+
+Fit a logistic model to the SEX using the main predictor of interest DOSE.
+Fit a logistic model to SEX using all predictors.
+For both models, compute accuracy and ROC-AUC and print them.
+```{r, warning=FALSE, message=FALSE}
+# Load packages
+library(tidymodels)
+library(dplyr)
+library(broom)
+library(yardstick)
+
+# Fit the first logistic regression model: SEX ~ DOSE
+logit_model1 <- logistic_reg() %>%
+  set_engine("glm") %>%
+  set_mode("classification") %>%
+  fit(SEX ~ DOSE, final_data)
+
+# Fit the second logistic regression model: SEX ~ all predictors
+logit_model2 <- logistic_reg() %>%
+  set_engine("glm") %>%
+  set_mode("classification") %>%
+  fit(SEX ~ DOSE + AGE + RACE + WT + HT, final_data)
+
+# Tidy summary of both models
+tidy_logit_model1 <- tidy(logit_model1)
+tidy_logit_model2 <- tidy(logit_model2)
+
+# Print the tidy summaries
+print(tidy_logit_model1)
+print(tidy_logit_model2)
+
+# Compute performance metrics
+metrics3 <- predict(logit_model1, final_data, type = "class") %>%
+  bind_cols(predict(logit_model1, final_data, type = "prob")) %>%
+  bind_cols(final_data) %>%
+  metrics(truth = SEX, estimate = .pred_class, .pred_1)
+
+# Compute performance metrics
+metrics4 <- predict(logit_model2, final_data, type = "class") %>%
+  bind_cols(predict(logit_model2, final_data, type = "prob")) %>%
+  bind_cols(final_data) %>%
+  metrics(truth = SEX, estimate = .pred_class, .pred_1)
+
+# Extract and print accuracy and ROC-AUC for both models
+cat("Model 1 (Y ~ DOSE):\n")
+cat("Accuracy:", round(metrics3 %>% filter(.metric == "accuracy") %>% pull(.estimate), 2), "\n")
+cat("ROC-AUC:", round(metrics3 %>% filter(.metric == "roc_auc") %>% pull(.estimate), 4), "\n\n")
+
+cat("Model 2 (Y ~ all predictors):\n")
+cat("Accuracy:", round(metrics4 %>% filter(.metric == "accuracy") %>% pull(.estimate), 2), "\n")
+cat("ROC-AUC:", round(metrics4 %>% filter(.metric == "roc_auc") %>% pull(.estimate), 4), "\n")
+
+```
+From the logistic model SEX ~ DOSE, the variable DOSE does not significantly influence the prediction of SEX. The model's accuracy is 0.87, meaning that 87% of the predictions were correct. However, the ROC-AUC value of 0.5919 indicates that the model has poor discriminatory ability, as it is only slightly better than random guessing.
+
+From the logistic model SEX ~ all predictors, which includes variables such as DOSE, AGE, RACE, WT, and HT, the variable HEIGHT shows a negative correlation with SEX, with a coefficient of -35.0. The accuracy of this model is 0.94, suggesting a substantial improvement in prediction accuracy compared to the first model. This improvement implies that the additional predictors provide more relevant information for predicting SEX, leading to more correct predictions. The ROC-AUC value of 0.9754, which is much closer to 1, indicates that the model performs excellently in distinguishing between the two classes.
+

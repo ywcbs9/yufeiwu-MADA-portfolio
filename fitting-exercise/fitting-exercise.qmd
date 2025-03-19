@@ -301,3 +301,238 @@ From the logistic model SEX ~ DOSE, the variable DOSE does not significantly inf
 
 From the logistic model SEX ~ all predictors, which includes variables such as DOSE, AGE, RACE, WT, and HT, the variable HEIGHT shows a negative correlation with SEX, with a coefficient of -35.0. The accuracy of this model is 0.94, suggesting a substantial improvement in prediction accuracy compared to the first model. This improvement implies that the additional predictors provide more relevant information for predicting SEX, leading to more correct predictions. The ROC-AUC value of 0.9754, which is much closer to 1, indicates that the model performs excellently in distinguishing between the two classes.
 
+
+
+# Module 10
+
+## Part 1
+
+Model performance assessment 1
+```{r, warning=FALSE}
+# Load packages
+library(tidymodels)
+library(dplyr)
+
+# Define a seed
+rngseed = 1234
+
+# Remove the race vairable
+data_fit <- final_data %>%
+  select(Y, DOSE, AGE, SEX, WT, HT)
+
+# Set a seed
+set.seed(rngseed)
+
+# Split the data
+data_split <- initial_split(data_fit, prop = 0.75)
+train_data <- training(data_split)
+test_data  <- testing(data_split)
+
+# Set up a workflow for model5: Y ~ DOSE
+model5_spec <- linear_reg() %>% 
+  set_engine("lm")
+
+model5_workflow <- workflow() %>% 
+  add_formula(Y ~ DOSE) %>%
+  add_model(model5_spec)
+
+# Fit model5 on the training data
+model5_fit <- fit(model5_workflow, data = train_data)
+
+# Set up a workflow for model6: Y ~ all predictors
+model6_spec <- linear_reg() %>% 
+  set_engine("lm")
+
+model6_workflow <- workflow() %>% 
+  add_formula(Y ~ .) %>%
+  add_model(model6_spec)
+
+# Fit model6 on the training data
+model6_fit <- fit(model6_workflow, data = train_data)
+
+# Compute predictions and RMSE for Model 5
+metrics5 <- model5_fit %>% 
+  predict(train_data) %>% 
+  bind_cols(train_data) %>%
+  metrics(truth = Y, estimate = .pred)
+
+# Compute predictions and RMSE for Model 6
+metrics6 <- model6_fit %>% 
+  predict(train_data) %>% 
+  bind_cols(train_data) %>%
+  metrics(truth = Y, estimate = .pred)
+
+# Compute RMSE for the null model (predicting mean Y)
+null_rmse <- train_data %>%
+  mutate(pred_null = mean(Y)) %>%
+  metrics(truth = Y, estimate = pred_null) %>%
+  filter(.metric == "rmse") %>%
+  pull(.estimate)
+
+# Extract RMSE values for comparison
+rmse5 <- metrics5 %>% filter(.metric == "rmse") %>% pull(.estimate)
+rmse6 <- metrics6 %>% filter(.metric == "rmse") %>% pull(.estimate)
+
+# Print results
+cat("Model 5 (Y ~ DOSE):\n")
+cat("  RMSE:", round(rmse5, 2), "\n")
+
+cat("Model 6 (Y ~ all predictors):\n")
+cat("  RMSE:", round(rmse6, 2), "\n")
+
+cat("Null Model (predicting mean Y):\n")
+cat("  RMSE:", round(null_rmse, 2), "\n")
+
+```
+
+Comparing the RMSE of three models, we can tell that the second model (Y ~ all predictors) performs the best with the lowest RMSE (627.44). In contrast, the RMSE of the first model (Y~ DOSE) is 702.81 and that of null model is 948.35.
+
+Model performance assessment 2
+```{r, warning=FALSE}
+# Set a seed
+set.seed(rngseed)
+
+# Create 10-fold cross-validation on the TRAINING DATA ONLY
+cv_folds <- vfold_cv(train_data, v = 10)
+
+# Define model specifications
+model5_spec <- linear_reg() %>% set_engine("lm")
+model6_spec <- linear_reg() %>% set_engine("lm")
+
+# Create workflows
+model5_workflow <- workflow() %>% 
+  add_formula(Y ~ DOSE) %>%
+  add_model(model5_spec)
+
+model6_workflow <- workflow() %>% 
+  add_formula(Y ~ .) %>%
+  add_model(model6_spec)
+
+# Perform 10-fold cross-validation for model5 on training data
+cv_results5 <- fit_resamples(
+  model5_workflow,
+  resamples = cv_folds,
+  metrics = metric_set(rmse),
+  control = control_resamples(save_pred = TRUE)
+)
+
+# Perform 10-fold cross-validation for model6 on training data
+cv_results6 <- fit_resamples(
+  model6_workflow,
+  resamples = cv_folds,
+  metrics = metric_set(rmse),
+  control = control_resamples(save_pred = TRUE)
+)
+
+# Extract RMSE estimates
+rmse5_summary <- collect_metrics(cv_results5) %>% filter(.metric == "rmse")
+rmse6_summary <- collect_metrics(cv_results6) %>% filter(.metric == "rmse")
+
+# Compute mean RMSE and standard error
+rmse5_mean <- rmse5_summary$mean
+rmse5_se <- rmse5_summary$std_err
+
+rmse6_mean <- rmse6_summary$mean
+rmse6_se <- rmse6_summary$std_err
+
+# Compute RMSE for the null model (same as before, using train_data)
+null_rmse <- train_data %>%
+  mutate(pred_null = mean(Y)) %>%
+  metrics(truth = Y, estimate = pred_null) %>%
+  filter(.metric == "rmse") %>%
+  pull(.estimate)
+
+# Print results
+cat("10-Fold Cross-Validation RMSE:\n")
+cat("Model 5 (Y ~ DOSE):\n")
+cat("  Mean RMSE:", round(rmse5_mean, 2), "\n")
+cat("  Standard Error:", round(rmse5_se, 4), "\n\n")
+
+cat("Model 6 (Y ~ all predictors):\n")
+cat("  Mean RMSE:", round(rmse6_mean, 2), "\n")
+cat("  Standard Error:", round(rmse6_se, 4), "\n\n")
+
+cat("Null Model (predicting mean Y, on training data):\n")
+cat("  RMSE:", round(null_rmse, 2), "\n\n")
+
+
+```
+With cross-validation, the RMSE of the first model (Y ~ DOSE) is 690.54 (standard error 67.4951), lower than without cross-validation (RMSE 702.81). The RMSE of the second model (Y ~ all predictors) is 645.69 (standard error 64.8193), higher than without cross-validation (RMSE 627.44). The RMSE of the null model remains the same (948.35). This time, the second model (Y ~ all predictors) still performs the best with the lowest RMSE. The standard errors of RMSE for both models are around 10% of mean, which suggests some variability in model performance across different folds.
+
+Choose a different value for the random seed
+```{r, warning=FALSE}
+# Set a seed
+set.seed(111)
+
+# Create 10-fold cross-validation on the TRAINING DATA ONLY
+cv_folds <- vfold_cv(train_data, v = 10)
+
+# Define model specifications
+model5_spec <- linear_reg() %>% set_engine("lm")
+model6_spec <- linear_reg() %>% set_engine("lm")
+
+# Create workflows
+model5_workflow <- workflow() %>% 
+  add_formula(Y ~ DOSE) %>%
+  add_model(model5_spec)
+
+model6_workflow <- workflow() %>% 
+  add_formula(Y ~ .) %>%
+  add_model(model6_spec)
+
+# Perform 10-fold cross-validation for model5 on training data
+cv_results5 <- fit_resamples(
+  model5_workflow,
+  resamples = cv_folds,
+  metrics = metric_set(rmse),
+  control = control_resamples(save_pred = TRUE)
+)
+
+# Perform 10-fold cross-validation for model6 on training data
+cv_results6 <- fit_resamples(
+  model6_workflow,
+  resamples = cv_folds,
+  metrics = metric_set(rmse),
+  control = control_resamples(save_pred = TRUE)
+)
+
+# Extract RMSE estimates
+rmse5_summary <- collect_metrics(cv_results5) %>% filter(.metric == "rmse")
+rmse6_summary <- collect_metrics(cv_results6) %>% filter(.metric == "rmse")
+
+# Compute mean RMSE and standard error
+rmse5_mean <- rmse5_summary$mean
+rmse5_se <- rmse5_summary$std_err
+
+rmse6_mean <- rmse6_summary$mean
+rmse6_se <- rmse6_summary$std_err
+
+# Compute RMSE for the null model (same as before, using train_data)
+null_rmse <- train_data %>%
+  mutate(pred_null = mean(Y)) %>%
+  metrics(truth = Y, estimate = pred_null) %>%
+  filter(.metric == "rmse") %>%
+  pull(.estimate)
+
+# Print results
+cat("10-Fold Cross-Validation RMSE:\n")
+cat("Model 5 (Y ~ DOSE):\n")
+cat("  Mean RMSE:", round(rmse5_mean, 2), "\n")
+cat("  Standard Error:", round(rmse5_se, 4), "\n\n")
+
+cat("Model 6 (Y ~ all predictors):\n")
+cat("  Mean RMSE:", round(rmse6_mean, 2), "\n")
+cat("  Standard Error:", round(rmse6_se, 4), "\n\n")
+
+cat("Null Model (predicting mean Y, on training data):\n")
+cat("  RMSE:", round(null_rmse, 2), "\n\n")
+
+
+
+```
+After the seed was changed from 1234 to 111, the RMSE values changed. The RMSE of the first model (Y ~ DOSE) is 682.35 (standard error 65.5072), and the RMSE of the second model (Y ~ all predictors) is 652.19 (standard error 46.5851), with the null model remaining the same. Still, the second model (Y ~ all predictors) performs the best with the lowest RMSE.
+
+
+
+
+

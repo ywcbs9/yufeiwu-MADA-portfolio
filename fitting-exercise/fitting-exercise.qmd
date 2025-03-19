@@ -533,6 +533,178 @@ cat("  RMSE:", round(null_rmse, 2), "\n\n")
 After the seed was changed from 1234 to 111, the RMSE values changed. The RMSE of the first model (Y ~ DOSE) is 682.35 (standard error 65.5072), and the RMSE of the second model (Y ~ all predictors) is 652.19 (standard error 46.5851), with the null model remaining the same. Still, the second model (Y ~ all predictors) performs the best with the lowest RMSE.
 
 
+##Part Two: This section was added by Natalie Cann
 
+Packages: 
 
+```{r}
+library(ggplot2)
+library(dplyr)
+```
 
+### Model Predictions
+
+First, I will put the observed and predicted values from teh 3 original model fits to all of the training data into a data frame. 
+
+```{r}
+# dataframe with observed and predicted values
+predictions_df <- bind_rows(
+  train_data %>% 
+    mutate(pred = predict(model5_fit, train_data)$.pred, model = "Dose Model"), # Model 5 is just dose
+  train_data %>% 
+    mutate(pred = predict(model6_fit, train_data)$.pred, model = "All Predictors Model"), # Model 6 is all predictors
+  train_data %>% 
+    mutate(pred = mean(train_data$Y), model = "Null Model")
+)
+```
+
+Now, I will use ggplot to create a figure plotting the observed values on the x-axis and the predictions on the y-axis. Each color in the graph will represent a different model. 
+
+```{r}
+ggplot(predictions_df, aes(x = Y, y = pred, color = model, shape = model)) +
+  geom_point(alpha = 0.6) + 
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") + # 45 degree line
+  labs(
+    x = "Observed Values",
+    y = "Predicted Values",
+    title = "Observed vs Predicted Values"
+  ) +
+  scale_x_continuous(limits = c(0, 5000)) +
+  scale_y_continuous(limits = c(0, 5000)) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 16, hjust = 0.5), # bold and larger title
+    axis.title = element_text(face = "bold", size = 14) # bold and larger axis labels
+  )
+```
+
+Now, I will create the graph above with facets. 
+
+```{r}
+ggplot(predictions_df, aes(x = Y, y = pred, color = model, shape = model)) +
+  geom_point(alpha = 0.6) + 
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") + # 45 degree line
+  labs(
+    x = "Observed Values",
+    y = "Predicted Values",
+    title = "Observed vs Predicted Values by Model"
+  ) +
+  scale_x_continuous(limits = c(0, 5000)) +
+  scale_y_continuous(limits = c(0, 5000)) +
+  facet_wrap(~ model) + # adding facets!
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 16, hjust = 0.5), # bold and larger title
+    axis.title = element_text(face = "bold", size = 14), # bold and larger axis labels
+    axis.text = element_text(size = 5) # smaller axis text so it can be seen
+  )
+```
+
+For the facet grid of the all predictors model, the points appear to be scattered around the 45 degree horizontal line. For the dose model, there appear to be three horizontal lines upon which the points fall. This makes sense because there are only 3 values for dose (show below to be: 25.0, 37.5, 50.0). For the null model, there is a single horizontal line that the points fall upon. This makes sense because we are predicting the exact same value for each observation. 
+
+```{r}
+unique(data$DOSE)
+```
+
+The model with all the predictors looks the best. To see if there are patterns, I will now plot the predicted vs. the residuals for this model (all predictors model). 
+
+```{r}
+# all predictors model 
+# compute predicted and residuals 
+all_preds <- model6_fit %>% 
+  predict(train_data) %>% 
+  bind_cols(train_data) %>%
+  mutate(residuals = .pred - Y)
+
+# plot predicted vs residuals
+ggplot(all_preds, aes(x = .pred, y = residuals)) +
+  geom_point(alpha = 0.6, color = "lightskyblue") + 
+  geom_hline(yintercept = 0, linetype = "dashed", color = "lightpink2") + # line at y = 0
+  labs(
+    x = "Predicted Values",
+    y = "Residuals",
+    title = "Predicted vs Residuals for All Predictors Model"
+  ) +
+  scale_y_continuous(limits = c(-1500, 1500)) + # scale for same pos/neg direction
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 16, hjust = 0.5), 
+    axis.title = element_text(face = "bold", size = 14), 
+    axis.text = element_text(size = 10) 
+  )
+```
+
+There appears to be some sort of pattern in the plot above. In particular, there appears to be more and higher negative values compared to positive ones. This suggests either: 1) we're missing important information (variables), 2) the model is too simple. 
+
+### Model Predictions and Uncertainty
+
+Focusing on model 2: 
+
+```{r}
+# setting seed 
+set.seed(rngseed) 
+
+# create 100 bootstraps (with bootstraps function from rsample package)
+library(rsample)
+dat_bs <- bootstraps(train_data, times = 100)
+
+library(purrr)
+
+# initialize a list to store predictions
+pred_bs <- vector("list", length = 100)
+
+# loop through each bootstrap sample
+for (i in seq_along(dat_bs$splits)) {
+  dat_sample <- rsample::analysis(dat_bs$splits[[i]])
+  model_fit <- lm(Y ~ ., data = dat_sample)
+  pred_bs[[i]] <- predict(model_fit, newdata = train_data)
+}
+
+# convert list to matrix
+pred_bs <- do.call(cbind, pred_bs)
+
+preds <- apply(pred_bs, 1, quantile, c(0.055, 0.5, 0.945))
+preds <- t(preds)
+colnames(preds) <- c("lower", "median", "upper")
+```
+
+Lastly, I will make a graph that plots observed values on the x-axis and point estimate, median, and upper & lower bounds on the y-axis. 
+
+```{r}
+# combine observed values and predictions
+plot_data <- data.frame(
+  observed = train_data$Y,
+  point_estimate = predict(lm(Y ~ ., data = train_data), newdata = train_data),
+  median = preds[, "median"],
+  lower = preds[, "lower"],
+  upper = preds[, "upper"]
+)
+
+ggplot(plot_data, aes(x = observed)) +
+  geom_point(aes(y = point_estimate, color = "Point Estimate"), size = 2) +
+  geom_point(aes(y = median, color = "Median"), size = 2, shape = 15) +
+  geom_errorbar(aes(ymin = lower, ymax = upper, color = "89% Confidence Interval"), width = 0.2) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+  scale_color_manual(
+    values = c("Point Estimate" = "deepskyblue", "Median" = "hotpink2", "89% Confidence Interval" = "lightgreen"),
+    name = "Legend"
+  ) +
+  labs(
+    x = "Observed Values",
+    y = "Predicted Values",
+    title = "Observed vs Predicted Values with Uncertainty"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 16, hjust = 0.5), # bold and larger title
+    axis.title = element_text(face = "bold", size = 14), # bold and larger axis labels
+    axis.text = element_text(size = 10) # larger axis text for better visibility
+  )
+```
+The graph above displays several points that lie closer to the diagonal line and several points that lie further from the diagonal line. The points that lie closer to the line indicate that this prediction is closer to the observed (actual) value. The points that lie further from the line indicate that the prediction is further from the observed value. 
+
+More narrow error bars are better than wider error bars. When the error bar crosses over the diagonal line, it is possible that the true value could be either overestimated or underestimated by the model.
+
+When the point estimates and medians are closer, it is indicated that the bootstrap sampling method did not significantly alter the central tendency of the predictions. When we see point estimates and medians that are far away from each other, we should consider that this may have occurred due to bias. 
+
+In the graph above, we see that most point estimates and medians are similar to each other. There is a large number of points for which their 89% confidence interval does not cross teh diagonal line, which is a good sign (suggests that most of the 89% CIs are statistically significant). However, it can be noted that the cluster of points at the top right corner of the graph suggest that the model's predicted value of Y appears to be underestimated when compared to the observed value of Y. 

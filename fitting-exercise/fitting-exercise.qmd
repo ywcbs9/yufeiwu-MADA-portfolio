@@ -396,44 +396,44 @@ set.seed(rngseed)
 cv_folds <- vfold_cv(train_data, v = 10)
 
 # Define model specifications
-model5_spec <- linear_reg() %>% set_engine("lm")
-model6_spec <- linear_reg() %>% set_engine("lm")
+model5_cv_spec <- linear_reg() %>% set_engine("lm")
+model6_cv_spec <- linear_reg() %>% set_engine("lm")
 
 # Create workflows
-model5_workflow <- workflow() %>% 
+model5_cv_workflow <- workflow() %>% 
   add_formula(Y ~ DOSE) %>%
-  add_model(model5_spec)
+  add_model(model5_cv_spec)
 
-model6_workflow <- workflow() %>% 
+model6_cv_workflow <- workflow() %>% 
   add_formula(Y ~ .) %>%
-  add_model(model6_spec)
+  add_model(model6_cv_spec)
 
-# Perform 10-fold cross-validation for model5 on training data
-cv_results5 <- fit_resamples(
-  model5_workflow,
+# Perform 10-fold cross-validation for model5_cv on training data
+cv_results5_cv <- fit_resamples(
+  model5_cv_workflow,
   resamples = cv_folds,
   metrics = metric_set(rmse),
   control = control_resamples(save_pred = TRUE)
 )
 
-# Perform 10-fold cross-validation for model6 on training data
-cv_results6 <- fit_resamples(
-  model6_workflow,
+# Perform 10-fold cross-validation for model6_cv on training data
+cv_results6_cv <- fit_resamples(
+  model6_cv_workflow,
   resamples = cv_folds,
   metrics = metric_set(rmse),
   control = control_resamples(save_pred = TRUE)
 )
 
 # Extract RMSE estimates
-rmse5_summary <- collect_metrics(cv_results5) %>% filter(.metric == "rmse")
-rmse6_summary <- collect_metrics(cv_results6) %>% filter(.metric == "rmse")
+rmse5_cv_summary <- collect_metrics(cv_results5_cv) %>% filter(.metric == "rmse")
+rmse6_cv_summary <- collect_metrics(cv_results6_cv) %>% filter(.metric == "rmse")
 
 # Compute mean RMSE and standard error
-rmse5_mean <- rmse5_summary$mean
-rmse5_se <- rmse5_summary$std_err
+rmse5_cv_mean <- rmse5_cv_summary$mean
+rmse5_cv_se <- rmse5_cv_summary$std_err
 
-rmse6_mean <- rmse6_summary$mean
-rmse6_se <- rmse6_summary$std_err
+rmse6_cv_mean <- rmse6_cv_summary$mean
+rmse6_cv_se <- rmse6_cv_summary$std_err
 
 # Compute RMSE for the null model (same as before, using train_data)
 null_rmse <- train_data %>%
@@ -445,15 +445,16 @@ null_rmse <- train_data %>%
 # Print results
 cat("10-Fold Cross-Validation RMSE:\n")
 cat("Model 5 (Y ~ DOSE):\n")
-cat("  Mean RMSE:", round(rmse5_mean, 2), "\n")
-cat("  Standard Error:", round(rmse5_se, 4), "\n\n")
+cat("  Mean RMSE:", round(rmse5_cv_mean, 2), "\n")
+cat("  Standard Error:", round(rmse5_cv_se, 4), "\n\n")
 
 cat("Model 6 (Y ~ all predictors):\n")
-cat("  Mean RMSE:", round(rmse6_mean, 2), "\n")
-cat("  Standard Error:", round(rmse6_se, 4), "\n\n")
+cat("  Mean RMSE:", round(rmse6_cv_mean, 2), "\n")
+cat("  Standard Error:", round(rmse6_cv_se, 4), "\n\n")
 
 cat("Null Model (predicting mean Y, on training data):\n")
 cat("  RMSE:", round(null_rmse, 2), "\n\n")
+
 
 
 ```
@@ -468,44 +469,44 @@ set.seed(111)
 cv_folds <- vfold_cv(train_data, v = 10)
 
 # Define model specifications
-model5_spec <- linear_reg() %>% set_engine("lm")
-model6_spec <- linear_reg() %>% set_engine("lm")
+model5_cv_new_spec <- linear_reg() %>% set_engine("lm")
+model6_cv_new_spec <- linear_reg() %>% set_engine("lm")
 
 # Create workflows
-model5_workflow <- workflow() %>% 
+model5_cv_new_workflow <- workflow() %>% 
   add_formula(Y ~ DOSE) %>%
-  add_model(model5_spec)
+  add_model(model5_cv_new_spec)
 
-model6_workflow <- workflow() %>% 
+model6_cv_new_workflow <- workflow() %>% 
   add_formula(Y ~ .) %>%
-  add_model(model6_spec)
+  add_model(model6_cv_new_spec)
 
-# Perform 10-fold cross-validation for model5 on training data
-cv_results5 <- fit_resamples(
-  model5_workflow,
+# Perform 10-fold cross-validation for model5_cv_new on training data
+cv_results5_cv_new <- fit_resamples(
+  model5_cv_new_workflow,
   resamples = cv_folds,
   metrics = metric_set(rmse),
   control = control_resamples(save_pred = TRUE)
 )
 
-# Perform 10-fold cross-validation for model6 on training data
-cv_results6 <- fit_resamples(
-  model6_workflow,
+# Perform 10-fold cross-validation for model6_cv_new on training data
+cv_results6_cv_new <- fit_resamples(
+  model6_cv_new_workflow,
   resamples = cv_folds,
   metrics = metric_set(rmse),
   control = control_resamples(save_pred = TRUE)
 )
 
 # Extract RMSE estimates
-rmse5_summary <- collect_metrics(cv_results5) %>% filter(.metric == "rmse")
-rmse6_summary <- collect_metrics(cv_results6) %>% filter(.metric == "rmse")
+rmse5_cv_new_summary <- collect_metrics(cv_results5_cv_new) %>% filter(.metric == "rmse")
+rmse6_cv_new_summary <- collect_metrics(cv_results6_cv_new) %>% filter(.metric == "rmse")
 
 # Compute mean RMSE and standard error
-rmse5_mean <- rmse5_summary$mean
-rmse5_se <- rmse5_summary$std_err
+rmse5_cv_new_mean <- rmse5_cv_new_summary$mean
+rmse5_cv_new_se <- rmse5_cv_new_summary$std_err
 
-rmse6_mean <- rmse6_summary$mean
-rmse6_se <- rmse6_summary$std_err
+rmse6_cv_new_mean <- rmse6_cv_new_summary$mean
+rmse6_cv_new_se <- rmse6_cv_new_summary$std_err
 
 # Compute RMSE for the null model (same as before, using train_data)
 null_rmse <- train_data %>%
@@ -517,15 +518,16 @@ null_rmse <- train_data %>%
 # Print results
 cat("10-Fold Cross-Validation RMSE:\n")
 cat("Model 5 (Y ~ DOSE):\n")
-cat("  Mean RMSE:", round(rmse5_mean, 2), "\n")
-cat("  Standard Error:", round(rmse5_se, 4), "\n\n")
+cat("  Mean RMSE:", round(rmse5_cv_new_mean, 2), "\n")
+cat("  Standard Error:", round(rmse5_cv_new_se, 4), "\n\n")
 
 cat("Model 6 (Y ~ all predictors):\n")
-cat("  Mean RMSE:", round(rmse6_mean, 2), "\n")
-cat("  Standard Error:", round(rmse6_se, 4), "\n\n")
+cat("  Mean RMSE:", round(rmse6_cv_new_mean, 2), "\n")
+cat("  Standard Error:", round(rmse6_cv_new_se, 4), "\n\n")
 
 cat("Null Model (predicting mean Y, on training data):\n")
 cat("  RMSE:", round(null_rmse, 2), "\n\n")
+
 
 
 
@@ -533,7 +535,7 @@ cat("  RMSE:", round(null_rmse, 2), "\n\n")
 After the seed was changed from 1234 to 111, the RMSE values changed. The RMSE of the first model (Y ~ DOSE) is 682.35 (standard error 65.5072), and the RMSE of the second model (Y ~ all predictors) is 652.19 (standard error 46.5851), with the null model remaining the same. Still, the second model (Y ~ all predictors) performs the best with the lowest RMSE.
 
 
-##Part Two: This section was added by Natalie Cann
+## Part Two: This section was added by Natalie Cann
 
 Packages: 
 
@@ -708,3 +710,66 @@ More narrow error bars are better than wider error bars. When the error bar cros
 When the point estimates and medians are closer, it is indicated that the bootstrap sampling method did not significantly alter the central tendency of the predictions. When we see point estimates and medians that are far away from each other, we should consider that this may have occurred due to bias. 
 
 In the graph above, we see that most point estimates and medians are similar to each other. There is a large number of points for which their 89% confidence interval does not cross teh diagonal line, which is a good sign (suggests that most of the 89% CIs are statistically significant). However, it can be noted that the cluster of points at the top right corner of the graph suggest that the model's predicted value of Y appears to be underestimated when compared to the observed value of Y. 
+
+
+## Part 3
+
+### Final evaluation using test data
+
+```{r}
+
+# Predict on training data
+train_predictions <- predict(model6_fit, train_data) %>%
+  bind_cols(train_data %>% select(Y)) %>%
+  mutate(Set = "Training")
+
+# Predict on test data
+test_predictions <- predict(model6_fit, test_data) %>%
+  bind_cols(test_data %>% select(Y)) %>%
+  mutate(Set = "Test")
+
+# Combine training and test predictions into a single data frame
+predictions_train_test_df <- bind_rows(train_predictions, test_predictions) %>%
+  rename(Observed = Y, Predicted = .pred)
+
+
+# Create scatter plot with different colors for training and test data
+ggplot(predictions_train_test_df, aes(x = Observed, y = Predicted, color = Set, shape = Set)) +
+  geom_point(alpha = 0.7) + # Points for training and test predictions
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black") + # 45-degree line
+  scale_x_continuous(limits = c(0, 6000)) + 
+  scale_y_continuous(limits = c(0, 6000)) +
+  labs(title = "Observed vs Predicted Values (Y ~ all predictors): Training vs Test",
+       x = "Observed Values",
+       y = "Predicted Values") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+# Compute RMSE for training data
+rmse_train <- train_predictions %>%
+  metrics(truth = Y, estimate = .pred) %>%
+  filter(.metric == "rmse") %>%
+  pull(.estimate)
+
+# Compute RMSE for test data
+rmse_test <- test_predictions %>%
+  metrics(truth = Y, estimate = .pred) %>%
+  filter(.metric == "rmse") %>%
+  pull(.estimate)
+
+# Print RMSE results
+cat("Model 6 (Y ~ all predictors) Evaluation:\n")
+cat("Training RMSE:", round(rmse_train, 2), "\n")
+cat("Test RMSE:", round(rmse_test, 2), "\n")
+
+
+```
+The figure shows that the observed and predicted values for the test data are mixed in with the train data, which suggests that the model performs well. 
+
+## Overall model assessment
+
+Both models (Y ~ DOSE and Y ~ all predictors) are better than the null model as the RMSE of these models is lower than the null model. 
+
+The first model with only dose as a predictor can improve results over the null model, which suggests dose has an impact on the value of Y. 
+
+The second model with all predictors performs the best with the lowest RMSE. The predicted values for test data using the second model also indicate good performance. Interestingly, the RMSE for test data is even lower than the training data. The lower RMSE may be caused by random variation since the data set is small.

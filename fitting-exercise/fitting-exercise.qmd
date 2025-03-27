@@ -53,6 +53,10 @@ final_data <- joint_data %>%
 
 # View the resulting data frame
 head(final_data)
+
+# Save as rds
+save_data_location <- here::here("fitting-exercise", "final_data.rds")
+saveRDS(final_data, file = save_data_location)
 ```
 
 ## EDA

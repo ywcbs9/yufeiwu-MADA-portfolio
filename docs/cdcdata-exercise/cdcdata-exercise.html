@@ -155,6 +155,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../fitting-exercise/fitting-exercise.html">
  <span class="dropdown-text">Fitting Exercise</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../ml-models-exercise/ml-models-exercise.html">
+ <span class="dropdown-text">Machine Learning</span></a>
+  </li>  
     </ul>
   </li>
 </ul>
@@ -216,7 +220,7 @@ These packages will be installed into "~/Desktop/STAT master/MADA/yufeiwu-MADA-p
 
 # Installing packages --------------------------------------------------------
 - Installing rlang ...                          OK [linked from cache]
-Successfully installed 1 package in 2.6 milliseconds.</code></pre>
+Successfully installed 1 package in 6.2 milliseconds.</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"rlang"</span>, <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -236,7 +240,7 @@ These packages will be installed into "~/Desktop/STAT master/MADA/yufeiwu-MADA-p
 
 # Installing packages --------------------------------------------------------
 - Installing gt ...                             OK [linked from cache]
-Successfully installed 1 package in 3.2 milliseconds.</code></pre>
+Successfully installed 1 package in 3 milliseconds.</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
@@ -248,7 +252,7 @@ These packages will be installed into "~/Desktop/STAT master/MADA/yufeiwu-MADA-p
 
 # Installing packages --------------------------------------------------------
 - Installing gridExtra ...                      OK [linked from cache]
-Successfully installed 1 package in 3.1 milliseconds.</code></pre>
+Successfully installed 1 package in 4.5 milliseconds.</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -260,7 +264,7 @@ These packages will be installed into "~/Desktop/STAT master/MADA/yufeiwu-MADA-p
 
 # Installing packages --------------------------------------------------------
 - Installing ggpubr ...                         OK [linked from cache]
-Successfully installed 1 package in 3.6 milliseconds.</code></pre>
+Successfully installed 1 package in 3.5 milliseconds.</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
@@ -454,23 +458,23 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
 <span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">Lethal_Rate =</span> <span class="st">"Lethal Rate (%)"</span></span>
 <span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="bngakobxyf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#bngakobxyf table {
+<div id="wupszrkzvu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#wupszrkzvu table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#bngakobxyf thead, #bngakobxyf tbody, #bngakobxyf tfoot, #bngakobxyf tr, #bngakobxyf td, #bngakobxyf th {
+#wupszrkzvu thead, #wupszrkzvu tbody, #wupszrkzvu tfoot, #wupszrkzvu tr, #wupszrkzvu td, #wupszrkzvu th {
   border-style: none;
 }
 
-#bngakobxyf p {
+#wupszrkzvu p {
   margin: 0;
   padding: 0;
 }
 
-#bngakobxyf .gt_table {
+#wupszrkzvu .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -496,12 +500,12 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#bngakobxyf .gt_caption {
+#wupszrkzvu .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#bngakobxyf .gt_title {
+#wupszrkzvu .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -513,7 +517,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-bottom-width: 0;
 }
 
-#bngakobxyf .gt_subtitle {
+#wupszrkzvu .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -525,7 +529,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-top-width: 0;
 }
 
-#bngakobxyf .gt_heading {
+#wupszrkzvu .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -537,13 +541,13 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#bngakobxyf .gt_bottom_border {
+#wupszrkzvu .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#bngakobxyf .gt_col_headings {
+#wupszrkzvu .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -558,7 +562,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#bngakobxyf .gt_col_heading {
+#wupszrkzvu .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -578,7 +582,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   overflow-x: hidden;
 }
 
-#bngakobxyf .gt_column_spanner_outer {
+#wupszrkzvu .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -590,15 +594,15 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 4px;
 }
 
-#bngakobxyf .gt_column_spanner_outer:first-child {
+#wupszrkzvu .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#bngakobxyf .gt_column_spanner_outer:last-child {
+#wupszrkzvu .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#bngakobxyf .gt_column_spanner {
+#wupszrkzvu .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -610,11 +614,11 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   width: 100%;
 }
 
-#bngakobxyf .gt_spanner_row {
+#wupszrkzvu .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#bngakobxyf .gt_group_heading {
+#wupszrkzvu .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -640,7 +644,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   text-align: left;
 }
 
-#bngakobxyf .gt_empty_group_heading {
+#wupszrkzvu .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -655,15 +659,15 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   vertical-align: middle;
 }
 
-#bngakobxyf .gt_from_md > :first-child {
+#wupszrkzvu .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#bngakobxyf .gt_from_md > :last-child {
+#wupszrkzvu .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#bngakobxyf .gt_row {
+#wupszrkzvu .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -682,7 +686,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   overflow-x: hidden;
 }
 
-#bngakobxyf .gt_stub {
+#wupszrkzvu .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -695,7 +699,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#bngakobxyf .gt_stub_row_group {
+#wupszrkzvu .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -709,15 +713,15 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   vertical-align: top;
 }
 
-#bngakobxyf .gt_row_group_first td {
+#wupszrkzvu .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#bngakobxyf .gt_row_group_first th {
+#wupszrkzvu .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#bngakobxyf .gt_summary_row {
+#wupszrkzvu .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -727,16 +731,16 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#bngakobxyf .gt_first_summary_row {
+#wupszrkzvu .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#bngakobxyf .gt_first_summary_row.thick {
+#wupszrkzvu .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#bngakobxyf .gt_last_summary_row {
+#wupszrkzvu .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -746,7 +750,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#bngakobxyf .gt_grand_summary_row {
+#wupszrkzvu .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -756,7 +760,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#bngakobxyf .gt_first_grand_summary_row {
+#wupszrkzvu .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -766,7 +770,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#bngakobxyf .gt_last_grand_summary_row_top {
+#wupszrkzvu .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -776,11 +780,11 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#bngakobxyf .gt_striped {
+#wupszrkzvu .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#bngakobxyf .gt_table_body {
+#wupszrkzvu .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -789,7 +793,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#bngakobxyf .gt_footnotes {
+#wupszrkzvu .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -803,7 +807,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#bngakobxyf .gt_footnote {
+#wupszrkzvu .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -812,7 +816,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#bngakobxyf .gt_sourcenotes {
+#wupszrkzvu .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -826,7 +830,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#bngakobxyf .gt_sourcenote {
+#wupszrkzvu .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -834,72 +838,72 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#bngakobxyf .gt_left {
+#wupszrkzvu .gt_left {
   text-align: left;
 }
 
-#bngakobxyf .gt_center {
+#wupszrkzvu .gt_center {
   text-align: center;
 }
 
-#bngakobxyf .gt_right {
+#wupszrkzvu .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#bngakobxyf .gt_font_normal {
+#wupszrkzvu .gt_font_normal {
   font-weight: normal;
 }
 
-#bngakobxyf .gt_font_bold {
+#wupszrkzvu .gt_font_bold {
   font-weight: bold;
 }
 
-#bngakobxyf .gt_font_italic {
+#wupszrkzvu .gt_font_italic {
   font-style: italic;
 }
 
-#bngakobxyf .gt_super {
+#wupszrkzvu .gt_super {
   font-size: 65%;
 }
 
-#bngakobxyf .gt_footnote_marks {
+#wupszrkzvu .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#bngakobxyf .gt_asterisk {
+#wupszrkzvu .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#bngakobxyf .gt_indent_1 {
+#wupszrkzvu .gt_indent_1 {
   text-indent: 5px;
 }
 
-#bngakobxyf .gt_indent_2 {
+#wupszrkzvu .gt_indent_2 {
   text-indent: 10px;
 }
 
-#bngakobxyf .gt_indent_3 {
+#wupszrkzvu .gt_indent_3 {
   text-indent: 15px;
 }
 
-#bngakobxyf .gt_indent_4 {
+#wupszrkzvu .gt_indent_4 {
   text-indent: 20px;
 }
 
-#bngakobxyf .gt_indent_5 {
+#wupszrkzvu .gt_indent_5 {
   text-indent: 25px;
 }
 
-#bngakobxyf .katex-display {
+#wupszrkzvu .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#bngakobxyf div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#wupszrkzvu div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -973,23 +977,23 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
 <span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">Percentage =</span> <span class="st">"Percentage (%)"</span></span>
 <span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="quwdonepos" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#quwdonepos table {
+<div id="rlxupeicwv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#rlxupeicwv table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#quwdonepos thead, #quwdonepos tbody, #quwdonepos tfoot, #quwdonepos tr, #quwdonepos td, #quwdonepos th {
+#rlxupeicwv thead, #rlxupeicwv tbody, #rlxupeicwv tfoot, #rlxupeicwv tr, #rlxupeicwv td, #rlxupeicwv th {
   border-style: none;
 }
 
-#quwdonepos p {
+#rlxupeicwv p {
   margin: 0;
   padding: 0;
 }
 
-#quwdonepos .gt_table {
+#rlxupeicwv .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1015,12 +1019,12 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#quwdonepos .gt_caption {
+#rlxupeicwv .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#quwdonepos .gt_title {
+#rlxupeicwv .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1032,7 +1036,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-bottom-width: 0;
 }
 
-#quwdonepos .gt_subtitle {
+#rlxupeicwv .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1044,7 +1048,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-top-width: 0;
 }
 
-#quwdonepos .gt_heading {
+#rlxupeicwv .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1056,13 +1060,13 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#quwdonepos .gt_bottom_border {
+#rlxupeicwv .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#quwdonepos .gt_col_headings {
+#rlxupeicwv .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1077,7 +1081,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#quwdonepos .gt_col_heading {
+#rlxupeicwv .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1097,7 +1101,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   overflow-x: hidden;
 }
 
-#quwdonepos .gt_column_spanner_outer {
+#rlxupeicwv .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1109,15 +1113,15 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 4px;
 }
 
-#quwdonepos .gt_column_spanner_outer:first-child {
+#rlxupeicwv .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#quwdonepos .gt_column_spanner_outer:last-child {
+#rlxupeicwv .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#quwdonepos .gt_column_spanner {
+#rlxupeicwv .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1129,11 +1133,11 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   width: 100%;
 }
 
-#quwdonepos .gt_spanner_row {
+#rlxupeicwv .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#quwdonepos .gt_group_heading {
+#rlxupeicwv .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1159,7 +1163,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   text-align: left;
 }
 
-#quwdonepos .gt_empty_group_heading {
+#rlxupeicwv .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1174,15 +1178,15 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   vertical-align: middle;
 }
 
-#quwdonepos .gt_from_md > :first-child {
+#rlxupeicwv .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#quwdonepos .gt_from_md > :last-child {
+#rlxupeicwv .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#quwdonepos .gt_row {
+#rlxupeicwv .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1201,7 +1205,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   overflow-x: hidden;
 }
 
-#quwdonepos .gt_stub {
+#rlxupeicwv .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1214,7 +1218,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#quwdonepos .gt_stub_row_group {
+#rlxupeicwv .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1228,15 +1232,15 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   vertical-align: top;
 }
 
-#quwdonepos .gt_row_group_first td {
+#rlxupeicwv .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#quwdonepos .gt_row_group_first th {
+#rlxupeicwv .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#quwdonepos .gt_summary_row {
+#rlxupeicwv .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1246,16 +1250,16 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#quwdonepos .gt_first_summary_row {
+#rlxupeicwv .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#quwdonepos .gt_first_summary_row.thick {
+#rlxupeicwv .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#quwdonepos .gt_last_summary_row {
+#rlxupeicwv .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1265,7 +1269,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#quwdonepos .gt_grand_summary_row {
+#rlxupeicwv .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1275,7 +1279,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#quwdonepos .gt_first_grand_summary_row {
+#rlxupeicwv .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1285,7 +1289,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#quwdonepos .gt_last_grand_summary_row_top {
+#rlxupeicwv .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1295,11 +1299,11 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#quwdonepos .gt_striped {
+#rlxupeicwv .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#quwdonepos .gt_table_body {
+#rlxupeicwv .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1308,7 +1312,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#quwdonepos .gt_footnotes {
+#rlxupeicwv .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1322,7 +1326,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#quwdonepos .gt_footnote {
+#rlxupeicwv .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1331,7 +1335,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#quwdonepos .gt_sourcenotes {
+#rlxupeicwv .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1345,7 +1349,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#quwdonepos .gt_sourcenote {
+#rlxupeicwv .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1353,72 +1357,72 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#quwdonepos .gt_left {
+#rlxupeicwv .gt_left {
   text-align: left;
 }
 
-#quwdonepos .gt_center {
+#rlxupeicwv .gt_center {
   text-align: center;
 }
 
-#quwdonepos .gt_right {
+#rlxupeicwv .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#quwdonepos .gt_font_normal {
+#rlxupeicwv .gt_font_normal {
   font-weight: normal;
 }
 
-#quwdonepos .gt_font_bold {
+#rlxupeicwv .gt_font_bold {
   font-weight: bold;
 }
 
-#quwdonepos .gt_font_italic {
+#rlxupeicwv .gt_font_italic {
   font-style: italic;
 }
 
-#quwdonepos .gt_super {
+#rlxupeicwv .gt_super {
   font-size: 65%;
 }
 
-#quwdonepos .gt_footnote_marks {
+#rlxupeicwv .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#quwdonepos .gt_asterisk {
+#rlxupeicwv .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#quwdonepos .gt_indent_1 {
+#rlxupeicwv .gt_indent_1 {
   text-indent: 5px;
 }
 
-#quwdonepos .gt_indent_2 {
+#rlxupeicwv .gt_indent_2 {
   text-indent: 10px;
 }
 
-#quwdonepos .gt_indent_3 {
+#rlxupeicwv .gt_indent_3 {
   text-indent: 15px;
 }
 
-#quwdonepos .gt_indent_4 {
+#rlxupeicwv .gt_indent_4 {
   text-indent: 20px;
 }
 
-#quwdonepos .gt_indent_5 {
+#rlxupeicwv .gt_indent_5 {
   text-indent: 25px;
 }
 
-#quwdonepos .katex-display {
+#rlxupeicwv .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#quwdonepos div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#rlxupeicwv div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1621,23 +1625,23 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
 <span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">Percentage =</span> <span class="st">"Percentage (%)"</span></span>
 <span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="oaahwhorjm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#oaahwhorjm table {
+<div id="knhrzwfufu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#knhrzwfufu table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#oaahwhorjm thead, #oaahwhorjm tbody, #oaahwhorjm tfoot, #oaahwhorjm tr, #oaahwhorjm td, #oaahwhorjm th {
+#knhrzwfufu thead, #knhrzwfufu tbody, #knhrzwfufu tfoot, #knhrzwfufu tr, #knhrzwfufu td, #knhrzwfufu th {
   border-style: none;
 }
 
-#oaahwhorjm p {
+#knhrzwfufu p {
   margin: 0;
   padding: 0;
 }
 
-#oaahwhorjm .gt_table {
+#knhrzwfufu .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1663,12 +1667,12 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#oaahwhorjm .gt_caption {
+#knhrzwfufu .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#oaahwhorjm .gt_title {
+#knhrzwfufu .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1680,7 +1684,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-bottom-width: 0;
 }
 
-#oaahwhorjm .gt_subtitle {
+#knhrzwfufu .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1692,7 +1696,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-top-width: 0;
 }
 
-#oaahwhorjm .gt_heading {
+#knhrzwfufu .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1704,13 +1708,13 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#oaahwhorjm .gt_bottom_border {
+#knhrzwfufu .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#oaahwhorjm .gt_col_headings {
+#knhrzwfufu .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1725,7 +1729,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#oaahwhorjm .gt_col_heading {
+#knhrzwfufu .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1745,7 +1749,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   overflow-x: hidden;
 }
 
-#oaahwhorjm .gt_column_spanner_outer {
+#knhrzwfufu .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1757,15 +1761,15 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 4px;
 }
 
-#oaahwhorjm .gt_column_spanner_outer:first-child {
+#knhrzwfufu .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#oaahwhorjm .gt_column_spanner_outer:last-child {
+#knhrzwfufu .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#oaahwhorjm .gt_column_spanner {
+#knhrzwfufu .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1777,11 +1781,11 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   width: 100%;
 }
 
-#oaahwhorjm .gt_spanner_row {
+#knhrzwfufu .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#oaahwhorjm .gt_group_heading {
+#knhrzwfufu .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1807,7 +1811,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   text-align: left;
 }
 
-#oaahwhorjm .gt_empty_group_heading {
+#knhrzwfufu .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1822,15 +1826,15 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   vertical-align: middle;
 }
 
-#oaahwhorjm .gt_from_md > :first-child {
+#knhrzwfufu .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#oaahwhorjm .gt_from_md > :last-child {
+#knhrzwfufu .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#oaahwhorjm .gt_row {
+#knhrzwfufu .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1849,7 +1853,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   overflow-x: hidden;
 }
 
-#oaahwhorjm .gt_stub {
+#knhrzwfufu .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1862,7 +1866,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#oaahwhorjm .gt_stub_row_group {
+#knhrzwfufu .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1876,15 +1880,15 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   vertical-align: top;
 }
 
-#oaahwhorjm .gt_row_group_first td {
+#knhrzwfufu .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#oaahwhorjm .gt_row_group_first th {
+#knhrzwfufu .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#oaahwhorjm .gt_summary_row {
+#knhrzwfufu .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1894,16 +1898,16 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#oaahwhorjm .gt_first_summary_row {
+#knhrzwfufu .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#oaahwhorjm .gt_first_summary_row.thick {
+#knhrzwfufu .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#oaahwhorjm .gt_last_summary_row {
+#knhrzwfufu .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1913,7 +1917,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#oaahwhorjm .gt_grand_summary_row {
+#knhrzwfufu .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1923,7 +1927,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#oaahwhorjm .gt_first_grand_summary_row {
+#knhrzwfufu .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1933,7 +1937,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#oaahwhorjm .gt_last_grand_summary_row_top {
+#knhrzwfufu .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1943,11 +1947,11 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#oaahwhorjm .gt_striped {
+#knhrzwfufu .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#oaahwhorjm .gt_table_body {
+#knhrzwfufu .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1956,7 +1960,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#oaahwhorjm .gt_footnotes {
+#knhrzwfufu .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1970,7 +1974,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#oaahwhorjm .gt_footnote {
+#knhrzwfufu .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1979,7 +1983,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#oaahwhorjm .gt_sourcenotes {
+#knhrzwfufu .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1993,7 +1997,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#oaahwhorjm .gt_sourcenote {
+#knhrzwfufu .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2001,72 +2005,72 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#oaahwhorjm .gt_left {
+#knhrzwfufu .gt_left {
   text-align: left;
 }
 
-#oaahwhorjm .gt_center {
+#knhrzwfufu .gt_center {
   text-align: center;
 }
 
-#oaahwhorjm .gt_right {
+#knhrzwfufu .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#oaahwhorjm .gt_font_normal {
+#knhrzwfufu .gt_font_normal {
   font-weight: normal;
 }
 
-#oaahwhorjm .gt_font_bold {
+#knhrzwfufu .gt_font_bold {
   font-weight: bold;
 }
 
-#oaahwhorjm .gt_font_italic {
+#knhrzwfufu .gt_font_italic {
   font-style: italic;
 }
 
-#oaahwhorjm .gt_super {
+#knhrzwfufu .gt_super {
   font-size: 65%;
 }
 
-#oaahwhorjm .gt_footnote_marks {
+#knhrzwfufu .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#oaahwhorjm .gt_asterisk {
+#knhrzwfufu .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#oaahwhorjm .gt_indent_1 {
+#knhrzwfufu .gt_indent_1 {
   text-indent: 5px;
 }
 
-#oaahwhorjm .gt_indent_2 {
+#knhrzwfufu .gt_indent_2 {
   text-indent: 10px;
 }
 
-#oaahwhorjm .gt_indent_3 {
+#knhrzwfufu .gt_indent_3 {
   text-indent: 15px;
 }
 
-#oaahwhorjm .gt_indent_4 {
+#knhrzwfufu .gt_indent_4 {
   text-indent: 20px;
 }
 
-#oaahwhorjm .gt_indent_5 {
+#knhrzwfufu .gt_indent_5 {
   text-indent: 25px;
 }
 
-#oaahwhorjm .katex-display {
+#knhrzwfufu .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#oaahwhorjm div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#knhrzwfufu div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -2171,13 +2175,13 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(syn_iavdata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  lethal  origin   wt_loss wt_loss_day      temp
-1  FALSE Variant  9.116984    5.527572 1.3326351
-2  FALSE Variant 16.584922    9.240962 1.6178540
-3  FALSE Variant 10.120183    6.878953 1.8732801
-4   TRUE   Avian 12.757522   10.714237 0.9224663
-5  FALSE Variant  6.215084   10.296665 1.1012872
-6  FALSE   Human 12.308585    7.855492 0.8810121</code></pre>
+<pre><code>  lethal  origin   wt_loss wt_loss_day     temp
+1   TRUE Variant 18.380386    4.816247 1.242792
+2  FALSE   Avian  6.042990    9.145963 1.762021
+3  FALSE   Avian 11.362117    2.848906 2.183299
+4  FALSE   Human 10.474589    7.939606 1.758567
+5  FALSE   Avian  9.652191    5.852752 1.637387
+6  FALSE   Avian  8.803008    2.009296 2.118032</code></pre>
 </div>
 </div>
 <p>Check dimension of the generated dataset</p>
@@ -2191,20 +2195,20 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display a summary of the synthetic dataset</span></span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(syn_iavdata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   lethal           origin             wt_loss         wt_loss_day    
- Mode :logical   Length:728         Min.   :-12.130   Min.   :-2.807  
- FALSE:616       Class :character   1st Qu.:  5.399   1st Qu.: 4.503  
- TRUE :112       Mode  :character   Median :  9.550   Median : 6.449  
-                                    Mean   :  9.616   Mean   : 6.501  
-                                    3rd Qu.: 14.052   3rd Qu.: 8.642  
-                                    Max.   : 31.162   Max.   :16.636  
-      temp        
- Min.   :-0.8543  
- 1st Qu.: 1.0065  
- Median : 1.5658  
- Mean   : 1.5680  
- 3rd Qu.: 2.1247  
- Max.   : 3.9088  </code></pre>
+<pre><code>   lethal           origin             wt_loss        wt_loss_day    
+ Mode :logical   Length:728         Min.   :-7.525   Min.   :-6.797  
+ FALSE:609       Class :character   1st Qu.: 5.200   1st Qu.: 4.429  
+ TRUE :119       Mode  :character   Median : 9.595   Median : 6.537  
+                                    Mean   : 9.669   Mean   : 6.654  
+                                    3rd Qu.:14.186   3rd Qu.: 8.815  
+                                    Max.   :29.831   Max.   :15.429  
+      temp       
+ Min.   :-1.012  
+ 1st Qu.: 1.064  
+ Median : 1.585  
+ Mean   : 1.576  
+ 3rd Qu.: 2.081  
+ Max.   : 3.970  </code></pre>
 </div>
 </div>
 <section id="data-exploration-and-compare-between-original-dan-sythetic-data" class="level4">
@@ -2243,23 +2247,23 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
 <span id="cb53-26"><a href="#cb53-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">Lethal_Rate =</span> <span class="st">"Lethal Rate (%)"</span></span>
 <span id="cb53-27"><a href="#cb53-27" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="vspzhggqpg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#vspzhggqpg table {
+<div id="agagfcpevi" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#agagfcpevi table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#vspzhggqpg thead, #vspzhggqpg tbody, #vspzhggqpg tfoot, #vspzhggqpg tr, #vspzhggqpg td, #vspzhggqpg th {
+#agagfcpevi thead, #agagfcpevi tbody, #agagfcpevi tfoot, #agagfcpevi tr, #agagfcpevi td, #agagfcpevi th {
   border-style: none;
 }
 
-#vspzhggqpg p {
+#agagfcpevi p {
   margin: 0;
   padding: 0;
 }
 
-#vspzhggqpg .gt_table {
+#agagfcpevi .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -2285,12 +2289,12 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#vspzhggqpg .gt_caption {
+#agagfcpevi .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#vspzhggqpg .gt_title {
+#agagfcpevi .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2302,7 +2306,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-bottom-width: 0;
 }
 
-#vspzhggqpg .gt_subtitle {
+#agagfcpevi .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2314,7 +2318,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-top-width: 0;
 }
 
-#vspzhggqpg .gt_heading {
+#agagfcpevi .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2326,13 +2330,13 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#vspzhggqpg .gt_bottom_border {
+#agagfcpevi .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#vspzhggqpg .gt_col_headings {
+#agagfcpevi .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2347,7 +2351,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#vspzhggqpg .gt_col_heading {
+#agagfcpevi .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2367,7 +2371,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   overflow-x: hidden;
 }
 
-#vspzhggqpg .gt_column_spanner_outer {
+#agagfcpevi .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2379,15 +2383,15 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 4px;
 }
 
-#vspzhggqpg .gt_column_spanner_outer:first-child {
+#agagfcpevi .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#vspzhggqpg .gt_column_spanner_outer:last-child {
+#agagfcpevi .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#vspzhggqpg .gt_column_spanner {
+#agagfcpevi .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2399,11 +2403,11 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   width: 100%;
 }
 
-#vspzhggqpg .gt_spanner_row {
+#agagfcpevi .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#vspzhggqpg .gt_group_heading {
+#agagfcpevi .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2429,7 +2433,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   text-align: left;
 }
 
-#vspzhggqpg .gt_empty_group_heading {
+#agagfcpevi .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2444,15 +2448,15 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   vertical-align: middle;
 }
 
-#vspzhggqpg .gt_from_md > :first-child {
+#agagfcpevi .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#vspzhggqpg .gt_from_md > :last-child {
+#agagfcpevi .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#vspzhggqpg .gt_row {
+#agagfcpevi .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2471,7 +2475,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   overflow-x: hidden;
 }
 
-#vspzhggqpg .gt_stub {
+#agagfcpevi .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2484,7 +2488,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#vspzhggqpg .gt_stub_row_group {
+#agagfcpevi .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2498,15 +2502,15 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   vertical-align: top;
 }
 
-#vspzhggqpg .gt_row_group_first td {
+#agagfcpevi .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#vspzhggqpg .gt_row_group_first th {
+#agagfcpevi .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#vspzhggqpg .gt_summary_row {
+#agagfcpevi .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2516,16 +2520,16 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#vspzhggqpg .gt_first_summary_row {
+#agagfcpevi .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#vspzhggqpg .gt_first_summary_row.thick {
+#agagfcpevi .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#vspzhggqpg .gt_last_summary_row {
+#agagfcpevi .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2535,7 +2539,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#vspzhggqpg .gt_grand_summary_row {
+#agagfcpevi .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2545,7 +2549,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#vspzhggqpg .gt_first_grand_summary_row {
+#agagfcpevi .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2555,7 +2559,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#vspzhggqpg .gt_last_grand_summary_row_top {
+#agagfcpevi .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2565,11 +2569,11 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#vspzhggqpg .gt_striped {
+#agagfcpevi .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#vspzhggqpg .gt_table_body {
+#agagfcpevi .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2578,7 +2582,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#vspzhggqpg .gt_footnotes {
+#agagfcpevi .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2592,7 +2596,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#vspzhggqpg .gt_footnote {
+#agagfcpevi .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2601,7 +2605,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#vspzhggqpg .gt_sourcenotes {
+#agagfcpevi .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2615,7 +2619,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#vspzhggqpg .gt_sourcenote {
+#agagfcpevi .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2623,72 +2627,72 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#vspzhggqpg .gt_left {
+#agagfcpevi .gt_left {
   text-align: left;
 }
 
-#vspzhggqpg .gt_center {
+#agagfcpevi .gt_center {
   text-align: center;
 }
 
-#vspzhggqpg .gt_right {
+#agagfcpevi .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#vspzhggqpg .gt_font_normal {
+#agagfcpevi .gt_font_normal {
   font-weight: normal;
 }
 
-#vspzhggqpg .gt_font_bold {
+#agagfcpevi .gt_font_bold {
   font-weight: bold;
 }
 
-#vspzhggqpg .gt_font_italic {
+#agagfcpevi .gt_font_italic {
   font-style: italic;
 }
 
-#vspzhggqpg .gt_super {
+#agagfcpevi .gt_super {
   font-size: 65%;
 }
 
-#vspzhggqpg .gt_footnote_marks {
+#agagfcpevi .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#vspzhggqpg .gt_asterisk {
+#agagfcpevi .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#vspzhggqpg .gt_indent_1 {
+#agagfcpevi .gt_indent_1 {
   text-indent: 5px;
 }
 
-#vspzhggqpg .gt_indent_2 {
+#agagfcpevi .gt_indent_2 {
   text-indent: 10px;
 }
 
-#vspzhggqpg .gt_indent_3 {
+#agagfcpevi .gt_indent_3 {
   text-indent: 15px;
 }
 
-#vspzhggqpg .gt_indent_4 {
+#agagfcpevi .gt_indent_4 {
   text-indent: 20px;
 }
 
-#vspzhggqpg .gt_indent_5 {
+#agagfcpevi .gt_indent_5 {
   text-indent: 25px;
 }
 
-#vspzhggqpg .katex-display {
+#agagfcpevi .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#vspzhggqpg div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#agagfcpevi div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -2707,34 +2711,34 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
 </thead>
 <tbody class="gt_table_body">
 <tr class="odd">
-<td class="gt_row gt_left" headers="origin">Canine</td>
-<td class="gt_row gt_right" headers="Total">5</td>
-<td class="gt_row gt_right" headers="Lethal_True">1</td>
-<td class="gt_row gt_right" headers="Lethal_Rate">20.00</td>
+<td class="gt_row gt_left" headers="origin">Swine</td>
+<td class="gt_row gt_right" headers="Total">16</td>
+<td class="gt_row gt_right" headers="Lethal_True">5</td>
+<td class="gt_row gt_right" headers="Lethal_Rate">31.25</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="origin">Avian</td>
-<td class="gt_row gt_right" headers="Total">359</td>
-<td class="gt_row gt_right" headers="Lethal_True">63</td>
-<td class="gt_row gt_right" headers="Lethal_Rate">17.55</td>
+<td class="gt_row gt_left" headers="origin">Human</td>
+<td class="gt_row gt_right" headers="Total">180</td>
+<td class="gt_row gt_right" headers="Lethal_True">31</td>
+<td class="gt_row gt_right" headers="Lethal_Rate">17.22</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="origin">Human</td>
-<td class="gt_row gt_right" headers="Total">185</td>
-<td class="gt_row gt_right" headers="Lethal_True">28</td>
-<td class="gt_row gt_right" headers="Lethal_Rate">15.14</td>
+<td class="gt_row gt_left" headers="origin">Avian</td>
+<td class="gt_row gt_right" headers="Total">384</td>
+<td class="gt_row gt_right" headers="Lethal_True">62</td>
+<td class="gt_row gt_right" headers="Lethal_Rate">16.15</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="origin">Variant</td>
-<td class="gt_row gt_right" headers="Total">167</td>
-<td class="gt_row gt_right" headers="Lethal_True">19</td>
-<td class="gt_row gt_right" headers="Lethal_Rate">11.38</td>
+<td class="gt_row gt_right" headers="Total">145</td>
+<td class="gt_row gt_right" headers="Lethal_True">21</td>
+<td class="gt_row gt_right" headers="Lethal_Rate">14.48</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="origin">Swine</td>
-<td class="gt_row gt_right" headers="Total">12</td>
-<td class="gt_row gt_right" headers="Lethal_True">1</td>
-<td class="gt_row gt_right" headers="Lethal_Rate">8.33</td>
+<td class="gt_row gt_left" headers="origin">Canine</td>
+<td class="gt_row gt_right" headers="Total">3</td>
+<td class="gt_row gt_right" headers="Lethal_True">0</td>
+<td class="gt_row gt_right" headers="Lethal_Rate">0.00</td>
 </tr>
 </tbody>
 </table>
@@ -2762,23 +2766,23 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
 <span id="cb54-19"><a href="#cb54-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">Percentage =</span> <span class="st">"Percentage (%)"</span></span>
 <span id="cb54-20"><a href="#cb54-20" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="tstdpsctyg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#tstdpsctyg table {
+<div id="hkjndlzqio" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#hkjndlzqio table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#tstdpsctyg thead, #tstdpsctyg tbody, #tstdpsctyg tfoot, #tstdpsctyg tr, #tstdpsctyg td, #tstdpsctyg th {
+#hkjndlzqio thead, #hkjndlzqio tbody, #hkjndlzqio tfoot, #hkjndlzqio tr, #hkjndlzqio td, #hkjndlzqio th {
   border-style: none;
 }
 
-#tstdpsctyg p {
+#hkjndlzqio p {
   margin: 0;
   padding: 0;
 }
 
-#tstdpsctyg .gt_table {
+#hkjndlzqio .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -2804,12 +2808,12 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#tstdpsctyg .gt_caption {
+#hkjndlzqio .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#tstdpsctyg .gt_title {
+#hkjndlzqio .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2821,7 +2825,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-bottom-width: 0;
 }
 
-#tstdpsctyg .gt_subtitle {
+#hkjndlzqio .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2833,7 +2837,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-top-width: 0;
 }
 
-#tstdpsctyg .gt_heading {
+#hkjndlzqio .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2845,13 +2849,13 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#tstdpsctyg .gt_bottom_border {
+#hkjndlzqio .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#tstdpsctyg .gt_col_headings {
+#hkjndlzqio .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2866,7 +2870,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#tstdpsctyg .gt_col_heading {
+#hkjndlzqio .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2886,7 +2890,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   overflow-x: hidden;
 }
 
-#tstdpsctyg .gt_column_spanner_outer {
+#hkjndlzqio .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2898,15 +2902,15 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 4px;
 }
 
-#tstdpsctyg .gt_column_spanner_outer:first-child {
+#hkjndlzqio .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#tstdpsctyg .gt_column_spanner_outer:last-child {
+#hkjndlzqio .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#tstdpsctyg .gt_column_spanner {
+#hkjndlzqio .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2918,11 +2922,11 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   width: 100%;
 }
 
-#tstdpsctyg .gt_spanner_row {
+#hkjndlzqio .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#tstdpsctyg .gt_group_heading {
+#hkjndlzqio .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2948,7 +2952,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   text-align: left;
 }
 
-#tstdpsctyg .gt_empty_group_heading {
+#hkjndlzqio .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2963,15 +2967,15 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   vertical-align: middle;
 }
 
-#tstdpsctyg .gt_from_md > :first-child {
+#hkjndlzqio .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#tstdpsctyg .gt_from_md > :last-child {
+#hkjndlzqio .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#tstdpsctyg .gt_row {
+#hkjndlzqio .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2990,7 +2994,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   overflow-x: hidden;
 }
 
-#tstdpsctyg .gt_stub {
+#hkjndlzqio .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3003,7 +3007,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#tstdpsctyg .gt_stub_row_group {
+#hkjndlzqio .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3017,15 +3021,15 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   vertical-align: top;
 }
 
-#tstdpsctyg .gt_row_group_first td {
+#hkjndlzqio .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#tstdpsctyg .gt_row_group_first th {
+#hkjndlzqio .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#tstdpsctyg .gt_summary_row {
+#hkjndlzqio .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3035,16 +3039,16 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#tstdpsctyg .gt_first_summary_row {
+#hkjndlzqio .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#tstdpsctyg .gt_first_summary_row.thick {
+#hkjndlzqio .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#tstdpsctyg .gt_last_summary_row {
+#hkjndlzqio .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3054,7 +3058,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#tstdpsctyg .gt_grand_summary_row {
+#hkjndlzqio .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3064,7 +3068,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#tstdpsctyg .gt_first_grand_summary_row {
+#hkjndlzqio .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3074,7 +3078,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#tstdpsctyg .gt_last_grand_summary_row_top {
+#hkjndlzqio .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3084,11 +3088,11 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#tstdpsctyg .gt_striped {
+#hkjndlzqio .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#tstdpsctyg .gt_table_body {
+#hkjndlzqio .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3097,7 +3101,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#tstdpsctyg .gt_footnotes {
+#hkjndlzqio .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3111,7 +3115,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#tstdpsctyg .gt_footnote {
+#hkjndlzqio .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -3120,7 +3124,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#tstdpsctyg .gt_sourcenotes {
+#hkjndlzqio .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3134,7 +3138,7 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#tstdpsctyg .gt_sourcenote {
+#hkjndlzqio .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -3142,72 +3146,72 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
   padding-right: 5px;
 }
 
-#tstdpsctyg .gt_left {
+#hkjndlzqio .gt_left {
   text-align: left;
 }
 
-#tstdpsctyg .gt_center {
+#hkjndlzqio .gt_center {
   text-align: center;
 }
 
-#tstdpsctyg .gt_right {
+#hkjndlzqio .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#tstdpsctyg .gt_font_normal {
+#hkjndlzqio .gt_font_normal {
   font-weight: normal;
 }
 
-#tstdpsctyg .gt_font_bold {
+#hkjndlzqio .gt_font_bold {
   font-weight: bold;
 }
 
-#tstdpsctyg .gt_font_italic {
+#hkjndlzqio .gt_font_italic {
   font-style: italic;
 }
 
-#tstdpsctyg .gt_super {
+#hkjndlzqio .gt_super {
   font-size: 65%;
 }
 
-#tstdpsctyg .gt_footnote_marks {
+#hkjndlzqio .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#tstdpsctyg .gt_asterisk {
+#hkjndlzqio .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#tstdpsctyg .gt_indent_1 {
+#hkjndlzqio .gt_indent_1 {
   text-indent: 5px;
 }
 
-#tstdpsctyg .gt_indent_2 {
+#hkjndlzqio .gt_indent_2 {
   text-indent: 10px;
 }
 
-#tstdpsctyg .gt_indent_3 {
+#hkjndlzqio .gt_indent_3 {
   text-indent: 15px;
 }
 
-#tstdpsctyg .gt_indent_4 {
+#hkjndlzqio .gt_indent_4 {
   text-indent: 20px;
 }
 
-#tstdpsctyg .gt_indent_5 {
+#hkjndlzqio .gt_indent_5 {
   text-indent: 25px;
 }
 
-#tstdpsctyg .katex-display {
+#hkjndlzqio .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#tstdpsctyg div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#hkjndlzqio div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -3226,28 +3230,28 @@ Successfully installed 1 package in 3.6 milliseconds.</code></pre>
 <tbody class="gt_table_body">
 <tr class="odd">
 <td class="gt_row gt_left" headers="origin">Avian</td>
-<td class="gt_row gt_right" headers="Count">359</td>
-<td class="gt_row gt_right" headers="Percentage">49.31</td>
+<td class="gt_row gt_right" headers="Count">384</td>
+<td class="gt_row gt_right" headers="Percentage">52.75</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="origin">Human</td>
-<td class="gt_row gt_right" headers="Count">185</td>
-<td class="gt_row gt_right" headers="Percentage">25.41</td>
+<td class="gt_row gt_right" headers="Count">180</td>
+<td class="gt_row gt_right" headers="Percentage">24.73</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="origin">Variant</td>
-<td class="gt_row gt_right" headers="Count">167</td>
-<td class="gt_row gt_right" headers="Percentage">22.94</td>
+<td class="gt_row gt_right" headers="Count">145</td>
+<td class="gt_row gt_right" headers="Percentage">19.92</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="origin">Swine</td>
-<td class="gt_row gt_right" headers="Count">12</td>
-<td class="gt_row gt_right" headers="Percentage">1.65</td>
+<td class="gt_row gt_right" headers="Count">16</td>
+<td class="gt_row gt_right" headers="Percentage">2.20</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="origin">Canine</td>
-<td class="gt_row gt_right" headers="Count">5</td>
-<td class="gt_row gt_right" headers="Percentage">0.69</td>
+<td class="gt_row gt_right" headers="Count">3</td>
+<td class="gt_row gt_right" headers="Percentage">0.41</td>
 </tr>
 </tbody>
 </table>
